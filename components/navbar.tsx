@@ -25,6 +25,7 @@ export const Navbar = () => {
             width={20}
             height={10}
             style={{ filter: "invert(1)" }}
+            className="hover:scale-110 transition-all duration-300"
           />
         </span>
 
@@ -35,6 +36,7 @@ export const Navbar = () => {
             width={20}
             height={15}
             style={{ filter: "invert(1)" }}
+            className="hover:scale-110 transition-all duration-300"
           />
         </span>
       </div>
