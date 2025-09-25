@@ -7,8 +7,8 @@ export const Hero = () => {
   return (
     <div className="relative overflow-hidden min-h-screen text-center">
       <GridBeams>
-        <div className="relative max-w-6xl mx-auto">
-          <Spotlight
+        <div className="relative max-w-6xl mx-auto z-0 inset-0">
+          {/* <Spotlight
             className="absolute -top-40 -left-10 md:left-32 md:-top-20"
             fill="white"
           />
@@ -20,15 +20,30 @@ export const Hero = () => {
           <Spotlight
             className="absolute top-20 left-1/2 transform -translate-x-1/2"
             fill="white"
+          /> */}
+            <Spotlight
+              className="absolute -top-40 left-0 md:-top-20 md:left-60"
+              fill="white"
+            />
+            <Spotlight
+              className="absolute -top-40 -right-10 md:-top-20 md:-right-60"
+              fill="white"
+            />
+
+             <Spotlight
+            className="absolute -bottom-40 left-1/2 transform -translate-x-1/2 md:-bottom-20"
+            fill="white"
           />
+
+      
           <div>
             <Image
               src={"/product.png"}
               alt="product_image"
               width={0}
               height={0}
-              sizes="80vw"
-              className="w-full h-auto max-h-[60vh] object-contain rounded-lg block"
+              sizes="90vw"
+              className="w-full h-auto max-h-[70vh] object-contain rounded-lg block"
               style={{
                 filter: "drop-shadow(0 20px 25px rgba(255,255,255,0.1))",
               }}

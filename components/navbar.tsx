@@ -3,7 +3,7 @@ import {Orbitron } from "next/font/google";
 
 export const Navbar = () => {
   return (
-    <div className="relative flex justify-between items-center text-center p-6">
+    <div className="relative flex justify-between items-center text-center px-4">
       <div className="relative flex items-center">
         <span
           className="font-orbitron text-2xl font-bold tracking-wider p-4"
