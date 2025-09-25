@@ -1,20 +1,20 @@
 import Image from "next/image";
+import {Orbitron } from "next/font/google";
 
 export const Navbar = () => {
   return (
-    <div className="relative flex justify-between items-center text-center gap-2">
+    <div className="relative flex justify-between items-center text-center p-6">
       <div className="relative flex items-center">
         <span
-          className="text-2xl font-bold tracking-wider"
-          style={{ fontFamily: "Orbit" }}
+          className="font-orbitron text-2xl font-bold tracking-wider p-4"
         >
           SENPAI STYLES
         </span>
       </div>
 
       <div className="relative flex items-center gap-4">
-        <p className="text-sm gap-x-2">About</p>
-        <p className="text-sm">Contact</p>
+        <p className="text-sm gap-x-2 font-serif hover:text-gray-300 duration-300 cursor-pointer">About</p>
+        <p className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer">Contact</p>
       </div>
 
       <div className="relative flex text-center gap-4 p-4">
