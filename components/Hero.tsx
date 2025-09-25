@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import { Spotlight } from './ui/spotlight'
+import { GridBeams } from './ui/grid-beams'
 
 export const Hero = () => {
   return (
@@ -8,59 +9,36 @@ export const Hero = () => {
       <div className='flex justify-center items-center relative'>
         <div className='relative z-20 w-[80vw] max-w-[80vw] max-h-[70vh] rounded-2xl overflow-hidden'>
           
-          {/* Main spotlight from top-left */}
+          <GridBeams>
+
           <Spotlight
             className="absolute -top-40 -left-10 md:left-32 md:-top-20"
           fill="white"
             />
           
-          {/* Secondary spotlight from top-right */}
           <Spotlight
             className="absolute -top-32 -right-10 md:right-32 md:-top-16"
           fill="white"
             />
           
-          <Spotlight
-            className="absolute -top-20 right-0 md:right-20"
-          fill="white"
-            />
-          
-          <Spotlight
-            className="absolute top-10 -right-20 md:right-0"
-          fill="white"
-            />
-          
-          {/* Middle right spotlight */}
-          <Spotlight
-            className="absolute top-32 left-80 hidden md:inline"
-            fill="white"
-          />
-          
-          {/* Bottom left accent */}
-          <Spotlight
-            className="absolute -bottom-32 -left-20 md:left-10"
-            fill="white"
-          />
-          
-          {/* Bottom right accent */}
+     
           <Spotlight
             className="absolute -bottom-40 right-10 md:right-32"
             fill="white"
           />
           
-          {/* Additional flowing spotlight - creates the curved effect */}
+
           <Spotlight
             className="absolute top-0 right-32 md:right-48 rotate-45"
             fill="white"
           />
           
-          {/* Subtle center highlight */}
+
           <Spotlight
             className="absolute top-20 left-1/2 transform -translate-x-1/2"
             fill="white"
           />
-          
-          {/* Image container with enhanced styling */}
+   
           <div className='relative  p-[2px] rounded-2xl'>
             <div className='rounded-2xl p-8 relative'>
               <Image
@@ -77,6 +55,7 @@ export const Hero = () => {
             </div>
             
           </div>
+          </GridBeams>
         </div>
         
 
