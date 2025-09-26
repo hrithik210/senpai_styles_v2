@@ -3,10 +3,10 @@ import React from "react";
 import { GridBeams } from "./ui/grid-beams";
 import { Spotlight } from "./ui/spotlight";
 import { Button } from "./ui/button";
+import Link from "next/link";
 export const Hero = () => {
   return (
     <div className="relative overflow-hidden min-h-screen text-center">
-      {/* <GridBeams> */}
         <div className="relative max-w-6xl mx-auto z-0 inset-0">
          
 
@@ -49,9 +49,15 @@ export const Hero = () => {
           <p className="text-lg md:text-xl mt-2 text-white/80 mb-5">
             One tee. Endless mystery.
           </p>
-          <Button className="bg-red-700 rounded-lg">Buy Now</Button>
+          <Link href={"/cart"}>
+            <Button 
+            className="bg-red-600 hover:bg-red-500 font-sans tracking-wide text-md
+             rounded-xl shadow-md hover:scale-110 transition-all duration-300 
+              px-12 py-5">
+              Buy Now
+            </Button>
+          </Link>
         </div>
-      {/* </GridBeams> */}
     </div>
   );
 };

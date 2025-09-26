@@ -11,12 +11,12 @@ export const Navbar = () => {
         </span>
       </div>
 
-      <div className="relative flex items-center gap-4 px-2 ">
+      <div className="relative flex items-center gap-4 px-2 left-[-66px]">
         <p className="text-sm gap-x-2 font-serif hover:text-gray-300 duration-300 cursor-pointer hover:bg-gray-900 font-semibold px-3 py-2 shadow-lg rounded-lg">About</p>
         <p className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer hover:bg-gray-900 font-semibold px-3 py-2 shadow-lg rounded-lg">Contact</p>
       </div>
 
-      <div className="relative flex text-center gap-4 p-4">
+      <div className="relative flex text-center gap-4 p-4 mr-4">
         <span className="gap-2 mr-2 ">
           <Image
             src={"/user.svg"}
@@ -28,7 +28,7 @@ export const Navbar = () => {
           />
         </span>
 
-        <span className="gap-2 mr-2 ">
+        <span className="gap-2 mr-2">
             <Image
             src={"/shopping-bag.png"}
             alt="user"
