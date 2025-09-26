@@ -6,21 +6,15 @@ import { Button } from "./ui/button";
 export const Hero = () => {
   return (
     <div className="relative overflow-hidden min-h-screen text-center">
-      <GridBeams>
+      {/* <GridBeams> */}
         <div className="relative max-w-6xl mx-auto z-0 inset-0">
-          {/* <Spotlight
-            className="absolute -top-40 -left-10 md:left-32 md:-top-20"
-            fill="white"
-          />
+         
 
           <Spotlight
             className="absolute -bottom-40 right-10 md:right-32"
             fill="white"
           />
-          <Spotlight
-            className="absolute top-20 left-1/2 transform -translate-x-1/2"
-            fill="white"
-          /> */}
+       
             <Spotlight
               className="absolute -top-40 left-0 md:-top-20 md:left-60"
               fill="white"
@@ -57,7 +51,7 @@ export const Hero = () => {
           </p>
           <Button className="bg-red-700 rounded-lg">Buy Now</Button>
         </div>
-      </GridBeams>
+      {/* </GridBeams> */}
     </div>
   );
 };

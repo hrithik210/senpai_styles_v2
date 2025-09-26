@@ -1,5 +1,4 @@
 import Image from "next/image";
-import {Orbitron } from "next/font/google";
 
 export const Navbar = () => {
   return (
@@ -12,9 +11,9 @@ export const Navbar = () => {
         </span>
       </div>
 
-      <div className="relative flex items-center gap-4">
-        <p className="text-sm gap-x-2 font-serif hover:text-gray-300 duration-300 cursor-pointer">About</p>
-        <p className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer">Contact</p>
+      <div className="relative flex items-center gap-4 px-2 ">
+        <p className="text-sm gap-x-2 font-serif hover:text-gray-300 duration-300 cursor-pointer hover:bg-gray-900 font-semibold px-3 py-2 shadow-lg rounded-lg">About</p>
+        <p className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer hover:bg-gray-900 font-semibold px-3 py-2 shadow-lg rounded-lg">Contact</p>
       </div>
 
       <div className="relative flex text-center gap-4 p-4">
