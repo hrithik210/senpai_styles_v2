@@ -6,35 +6,37 @@ import { Button } from './ui/button'
 const Cart = () => {
   const [quantity, setQuantity] = useState<number>(1)
   return (
-    <div className='flex flex-col justify-center items-center p-8'>
-        <div className='mb-10'>
-         <h1 className="font-orbitron text-4xl md:text-5xl font-bold tracking-wider">Your Cart</h1>
+    <div className='flex flex-col justify-center items-center p-4 md:p-8'>
+        <div className='mb-6 md:mb-10'>
+         <h1 className="font-orbitron text-3xl md:text-4xl lg:text-5xl font-bold tracking-wider text-center">Your Cart</h1>
         </div>
-        <div className='relative flex items-center justify-between p-4 bg-[#1a1a1a] rounded-lg border border-[#EA2831]/20 w-full max-w-4xl mt-8'>
-            <div className='flex items-center space-x-4'>
+        
+        {/* Cart Item */}
+        <div className='relative flex flex-col md:flex-row md:items-center md:justify-between p-4 md:p-6 bg-[#1a1a1a] rounded-lg border border-[#EA2831]/20 w-full max-w-4xl mt-4 md:mt-8 gap-4 md:gap-0'>
+            <div className='flex items-center space-x-3 md:space-x-4'>
                 <Image
                     alt="Forbidden Flame Tee"
-                    className="w-30 h-20 rounded-md object-cover"
+                    className="w-16 h-16 md:w-20 md:h-20 rounded-md object-cover flex-shrink-0"
                     src="/product.png"
-                    width={20}
-                    height={20}
+                    width={80}
+                    height={80}
                 />
-            <div>
-                <h2 className="font-bold text-lg">The Forbidden Flame Tee</h2>
-                <p className="text-[#ffffff]/70">$29.99</p>
-            </div>
+                <div className='min-w-0 flex-1'>
+                    <h2 className="font-bold text-base md:text-lg truncate">The Forbidden Flame Tee</h2>
+                    <p className="text-[#ffffff]/70 text-sm md:text-base">$29.99</p>
+                </div>
             </div>
 
-            <div className='flex items-center space-x-4'>
+            <div className='flex items-center justify-between md:justify-end space-x-4 md:space-x-6'>
                 <div className='flex items-center justify-center space-x-2'>
                     <button
-                    className="p-1 rounded-full bg-[#b30000] hover:bg-[#EA2831] transition-colors flex items-center justify-center"
+                    className="p-1.5 md:p-2 rounded-full bg-[#b30000] hover:bg-[#EA2831] transition-colors flex items-center justify-center"
                     aria-label="Remove item"
                     onClick={() => setQuantity(x => Math.max(1, x-1))}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-white"
+                            className="w-3 h-3 md:w-4 md:h-4 text-white"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -43,16 +45,16 @@ const Cart = () => {
                             <line x1="6" y1="12" x2="18" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                         </svg>
                     </button>
-                    <span className="w-8 text-center">{quantity}</span>
+                    <span className="w-8 text-center text-sm md:text-base">{quantity}</span>
                     <button
-                        className="p-1 rounded-full bg-[#b30000] hover:bg-[#EA2831] transition-colors flex items-center justify-center"
+                        className="p-1.5 md:p-2 rounded-full bg-[#b30000] hover:bg-[#EA2831] transition-colors flex items-center justify-center"
                         aria-label="Add item"
                         onClick={() => setQuantity(x => x + 1)}
                         disabled={quantity >= 3}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-white"
+                            className="w-3 h-3 md:w-4 md:h-4 text-white"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -64,25 +66,29 @@ const Cart = () => {
                     </button>
                 </div>
             </div>
-
         </div>
 
-        <div className="mt-8 pt-6 border-t border-[#EA2831]/20">
-            <p className="text-lg text-text-color/80">
-              Subtotal: <span className="font-bold text-text-color">$124.96</span>
-            </p>
-            <p className="text-sm text-text-color/60">
-              Taxes and shipping calculated at checkout.
-            </p>
-        </div>
+        {/* Cart Summary - Aligned to the right */}
+        <div className="w-full max-w-4xl flex flex-col items-end mt-6 md:mt-8">
+            <div className="w-full md:w-auto min-w-[280px] md:min-w-[320px] pt-6 border-t border-[#EA2831]/20">
+                <div className="text-right space-y-2">
+                    <p className="text-base md:text-lg text-text-color/80">
+                      Subtotal: <span className="font-bold text-text-color">$124.96</span>
+                    </p>
+                    <p className="text-xs md:text-sm text-text-color/60">
+                      Taxes and shipping calculated at checkout.
+                    </p>
+                </div>
+            </div>
 
-        <div className="mt-8 flex justify-end">
-            <Button
-              className="relative group bg-[#EA2831] text-white font-bold py-8 px-10 rounded-xl hover:scale-110 transition-all duration-300 overflow-hidden text-lg tracking-wide"
-            >
-              <span className="relative z-10">Checkout with Razorpay</span>
-            </Button>
-          </div>
+            <div className="mt-6 md:mt-8 w-full md:w-auto">
+                <Button
+                  className="w-full md:w-auto relative group bg-[#EA2831] text-white font-bold py-6 md:py-8 px-8 md:px-10 rounded-xl hover:scale-105 md:hover:scale-110 transition-all duration-300 overflow-hidden text-base md:text-lg tracking-wide"
+                >
+                  <span className="relative z-10">Checkout with Razorpay</span>
+                </Button>
+            </div>
+        </div>
     </div>
   )
 }
