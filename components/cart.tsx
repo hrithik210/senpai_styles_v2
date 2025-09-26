@@ -1,6 +1,7 @@
 "use client"
 import Image from 'next/image'
 import React, { useState } from 'react'
+import { Button } from './ui/button'
 
 const Cart = () => {
   const [quantity, setQuantity] = useState<number>(1)
@@ -9,7 +10,7 @@ const Cart = () => {
         <div className='mb-10'>
          <h1 className="font-orbitron text-4xl md:text-5xl font-bold tracking-wider">Your Cart</h1>
         </div>
-        <div className='flex items-center justify-between p-4 bg-[#1a1a1a] rounded-lg border border-[#EA2831]/20 w-full max-w-4xl mt-8'>
+        <div className='relative flex items-center justify-between p-4 bg-[#1a1a1a] rounded-lg border border-[#EA2831]/20 w-full max-w-4xl mt-8'>
             <div className='flex items-center space-x-4'>
                 <Image
                     alt="Forbidden Flame Tee"
@@ -65,6 +66,23 @@ const Cart = () => {
             </div>
 
         </div>
+
+        <div className="mt-8 pt-6 border-t border-[#EA2831]/20">
+            <p className="text-lg text-text-color/80">
+              Subtotal: <span className="font-bold text-text-color">$124.96</span>
+            </p>
+            <p className="text-sm text-text-color/60">
+              Taxes and shipping calculated at checkout.
+            </p>
+        </div>
+
+        <div className="mt-8 flex justify-end">
+            <Button
+              className="relative group bg-[#EA2831] text-white font-bold py-8 px-10 rounded-xl hover:scale-110 transition-all duration-300 overflow-hidden text-lg tracking-wide"
+            >
+              <span className="relative z-10">Checkout with Razorpay</span>
+            </Button>
+          </div>
     </div>
   )
 }
