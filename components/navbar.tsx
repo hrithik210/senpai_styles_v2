@@ -17,6 +17,9 @@ export const Navbar = () => {
       <div className="relative flex items-center gap-4 px-2 left-[-66px]">
         <p className="text-sm gap-x-2 font-serif hover:text-gray-300 duration-300 cursor-pointer hover:bg-gray-900 font-semibold px-3 py-2 shadow-lg rounded-lg">About</p>
         <p className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer hover:bg-gray-900 font-semibold px-3 py-2 shadow-lg rounded-lg">Contact</p>
+        <Link href="/dashboard">
+          <p className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer hover:bg-gray-900 font-semibold px-3 py-2 shadow-lg rounded-lg">Dashboard</p>
+        </Link>
       </div>
 
       <div className="relative flex text-center gap-4 p-4 mr-4">
@@ -32,14 +35,16 @@ export const Navbar = () => {
         </span>
 
         <span className="gap-2 mr-2">
+          <Link href="/cart">
             <Image
             src={"/shopping-bag.png"}
-            alt="user"
+            alt="shopping cart"
             width={20}
             height={15}
             style={{ filter: "invert(1)" }}
             className="hover:scale-110 transition-all duration-300"
           />
+          </Link>
         </span>
       </div>
     </div>

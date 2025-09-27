@@ -48,11 +48,52 @@ const CheckoutPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsProcessing(true)
-    // Simulate processing
-    setTimeout(() => {
+    
+    try {
+      // Prepare order data
+      const orderData = {
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        address: formData.address,
+        apartment: formData.apartment,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        country: formData.country,
+        phone: formData.phone,
+        items: cartItems,
+        subtotal: subtotal,
+        shipping: shipping,
+        tax: 0,
+        total: total,
+        paymentMethod: formData.paymentMethod
+      }
+
+      // Submit order to API
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        alert(`Order created successfully! Order ID: ${result.order.id}`)
+        // You could redirect to a success page here
+        // router.push('/order-success')
+      } else {
+        throw new Error(result.error || 'Failed to create order')
+      }
+    } catch (error) {
+      console.error('Order submission error:', error)
+      alert('Failed to process order. Please try again.')
+    } finally {
       setIsProcessing(false)
-      alert('Order processing... This is a demo checkout!')
-    }, 2000)
+    }
   }
 
   const subtotal = getSubtotal()
