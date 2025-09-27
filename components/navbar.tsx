@@ -1,14 +1,17 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export const Navbar = () => {
   return (
     <div className="relative flex justify-between items-center text-center px-4">
       <div className="relative flex items-center">
-        <span
-          className="font-orbitron text-2xl font-bold tracking-wider p-4"
-        >
-          SENPAI STYLES
-        </span>
+        <Link href={"/"}>
+          <span
+            className="font-orbitron text-2xl font-bold tracking-wider p-4"
+          >
+            SENPAI STYLES
+          </span>
+        </Link>
       </div>
 
       <div className="relative flex items-center gap-4 px-2 left-[-66px]">

@@ -2,8 +2,10 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useCart } from '@/lib/cart-context'
 
 const CheckoutPage = () => {
+  const { items: cartItems, getSubtotal } = useCart()
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -53,48 +55,31 @@ const CheckoutPage = () => {
     }, 2000)
   }
 
-  const cartItems = [
-    {
-      id: 1,
-      name: "The Forbidden Flame Tee",
-      price: 29.99,
-      quantity: 2,
-      image: "/product.png"
-    },
-    {
-      id: 2,
-      name: "Shadow Warrior Hoodie",
-      price: 49.99,
-      quantity: 1,
-      image: "/product.png"
-    }
-  ]
-
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)
+  const subtotal = getSubtotal()
   const shipping = 9.99
   const tax = subtotal * 0.08
   const total = subtotal + shipping + tax
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="font-orbitron text-3xl md:text-4xl lg:text-5xl font-bold tracking-wider">
+        <div className="mb-6 text-center">
+          <h1 className="font-orbitron text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider">
             Checkout
           </h1>
-          <p className="text-white/70 mt-2">Complete your order</p>
+          <p className="text-white/70 mt-1">Complete your order</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left Column - Checkout Form */}
-          <div className="space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* Left Column - Checkout Form (spans 2 columns on lg) */}
+          <div className="lg:col-span-2 space-y-6">
             {/* Contact Information */}
-            <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#EA2831]/20">
-              <h2 className="font-orbitron text-xl font-bold mb-6 text-[#EA2831]">Contact Information</h2>
-              <div className="space-y-4">
+            <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#EA2831]/20">
+              <h2 className="font-orbitron text-lg font-bold mb-4 text-[#EA2831]">Contact Information</h2>
+              <div className="space-y-3">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium mb-1">
                     Email Address <span className="text-[#EA2831]">*</span>
                   </label>
                   <input
@@ -103,7 +88,7 @@ const CheckoutPage = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                    className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                     placeholder="your.email@example.com"
                     required
                   />
@@ -112,12 +97,12 @@ const CheckoutPage = () => {
             </div>
 
             {/* Shipping Address */}
-            <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#EA2831]/20">
-              <h2 className="font-orbitron text-xl font-bold mb-6 text-[#EA2831]">Shipping Address</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#EA2831]/20">
+              <h2 className="font-orbitron text-lg font-bold mb-4 text-[#EA2831]">Shipping Address</h2>
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium mb-2">
+                    <label htmlFor="firstName" className="block text-sm font-medium mb-1">
                       First Name <span className="text-[#EA2831]">*</span>
                     </label>
                     <input
@@ -126,12 +111,12 @@ const CheckoutPage = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                       required
                     />
                   </div>
                   <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium mb-2">
+                    <label htmlFor="lastName" className="block text-sm font-medium mb-1">
                       Last Name <span className="text-[#EA2831]">*</span>
                     </label>
                     <input
@@ -140,14 +125,14 @@ const CheckoutPage = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="address" className="block text-sm font-medium mb-2">
+                  <label htmlFor="address" className="block text-sm font-medium mb-1">
                     Address <span className="text-[#EA2831]">*</span>
                   </label>
                   <input
@@ -156,14 +141,14 @@ const CheckoutPage = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                    className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                     placeholder="123 Main Street"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="apartment" className="block text-sm font-medium mb-2">
+                  <label htmlFor="apartment" className="block text-sm font-medium mb-1">
                     Apartment, Suite, etc.
                   </label>
                   <input
@@ -172,14 +157,14 @@ const CheckoutPage = () => {
                     name="apartment"
                     value={formData.apartment}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                    className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                     placeholder="Optional"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div>
-                    <label htmlFor="city" className="block text-sm font-medium mb-2">
+                    <label htmlFor="city" className="block text-sm font-medium mb-1">
                       City <span className="text-[#EA2831]">*</span>
                     </label>
                     <input
@@ -188,12 +173,12 @@ const CheckoutPage = () => {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                       required
                     />
                   </div>
                   <div>
-                    <label htmlFor="state" className="block text-sm font-medium mb-2">
+                    <label htmlFor="state" className="block text-sm font-medium mb-1">
                       State <span className="text-[#EA2831]">*</span>
                     </label>
                     <select
@@ -201,7 +186,7 @@ const CheckoutPage = () => {
                       name="state"
                       value={formData.state}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                       required
                     >
                       <option value="">Select State</option>
@@ -213,7 +198,7 @@ const CheckoutPage = () => {
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="zipCode" className="block text-sm font-medium mb-2">
+                    <label htmlFor="zipCode" className="block text-sm font-medium mb-1">
                       ZIP Code <span className="text-[#EA2831]">*</span>
                     </label>
                     <input
@@ -222,34 +207,39 @@ const CheckoutPage = () => {
                       name="zipCode"
                       value={formData.zipCode}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
+                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium mb-1">
                     Phone Number
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors"
-                    placeholder="(555) 123-4567"
-                  />
+                  <div className="flex">
+                    <span className="px-3 py-2 bg-[#1a1a1a] border border-[#EA2831]/30 border-r-0 rounded-l-lg flex items-center text-white/70 text-sm">
+                      +91
+                    </span>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="flex-1 px-3 py-2 bg-black border border-[#EA2831]/30 rounded-r-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                      placeholder="9876543210"
+                    />
+                  </div>
                 </div>
               </form>
             </div>
 
             {/* Payment Method */}
-            <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#EA2831]/20">
-              <h2 className="font-orbitron text-xl font-bold mb-6 text-[#EA2831]">Payment Method</h2>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3 p-4 border border-[#EA2831]/30 rounded-lg bg-[#EA2831]/10">
+            <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#EA2831]/20">
+              <h2 className="font-orbitron text-lg font-bold mb-4 text-[#EA2831]">Payment Method</h2>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3 p-3 border border-[#EA2831]/30 rounded-lg bg-[#EA2831]/10">
                   <input
                     type="radio"
                     id="razorpay"
@@ -261,14 +251,14 @@ const CheckoutPage = () => {
                   />
                   <label htmlFor="razorpay" className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">Razorpay</span>
+                      <span className="font-medium text-sm">Razorpay</span>
                       <div className="flex space-x-2">
                         <span className="text-xs bg-[#EA2831] text-white px-2 py-1 rounded">
                           Secure
                         </span>
                       </div>
                     </div>
-                    <p className="text-sm text-white/70 mt-1">
+                    <p className="text-xs text-white/70 mt-1">
                       Pay securely with credit card, debit card, or UPI
                     </p>
                   </label>
@@ -278,63 +268,63 @@ const CheckoutPage = () => {
           </div>
 
           {/* Right Column - Order Summary */}
-          <div className="lg:sticky lg:top-8 h-fit">
-            <div className="bg-[#1a1a1a] p-6 rounded-lg border border-[#EA2831]/20">
-              <h2 className="font-orbitron text-xl font-bold mb-6 text-[#EA2831]">Order Summary</h2>
+          <div className="lg:col-span-1">
+            <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#EA2831]/20">
+              <h2 className="font-orbitron text-lg font-bold mb-4 text-[#EA2831]">Order Summary</h2>
               
               {/* Cart Items */}
-              <div className="space-y-4 mb-6">
+              <div className="space-y-3 mb-4">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center space-x-4">
+                  <div key={item.id} className="flex items-center space-x-3">
                     <div className="relative">
                       <Image
                         src={item.image}
                         alt={item.name}
-                        width={60}
-                        height={60}
+                        width={50}
+                        height={50}
                         className="rounded-lg object-cover"
                       />
-                      <span className="absolute -top-2 -right-2 bg-[#EA2831] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      <span className="absolute -top-2 -right-2 bg-[#EA2831] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                         {item.quantity}
                       </span>
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-medium text-sm">{item.name}</h3>
-                      <p className="text-white/70 text-sm">Qty: {item.quantity}</p>
+                      <h3 className="font-medium text-xs">{item.name}</h3>
+                      <p className="text-white/70 text-xs">Qty: {item.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="font-bold text-sm">${(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Order Totals */}
-              <div className="border-t border-[#EA2831]/20 pt-4 space-y-3">
-                <div className="flex justify-between">
+              <div className="border-t border-[#EA2831]/20 pt-3 space-y-2">
+                <div className="flex justify-between text-sm">
                   <span className="text-white/70">Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm">
                   <span className="text-white/70">Shipping</span>
                   <span>${shipping.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm">
                   <span className="text-white/70">Tax</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-lg font-bold pt-3 border-t border-[#EA2831]/20">
+                <div className="flex justify-between text-base font-bold pt-2 border-t border-[#EA2831]/20">
                   <span>Total</span>
                   <span className="text-[#EA2831]">${total.toFixed(2)}</span>
                 </div>
               </div>
 
               {/* Complete Order Button */}
-              <div className="mt-8">
+              <div className="mt-4">
                 <Button
                   onClick={handleSubmit}
                   disabled={isProcessing}
-                  className="w-full relative group bg-[#EA2831] text-white font-bold py-6 px-8 rounded-xl hover:scale-105 transition-all duration-300 overflow-hidden text-lg tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full relative group bg-[#EA2831] text-white font-bold py-4 px-6 rounded-xl hover:scale-105 transition-all duration-300 overflow-hidden text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10">
                     {isProcessing ? 'Processing...' : `Complete Order - $${total.toFixed(2)}`}
@@ -345,16 +335,16 @@ const CheckoutPage = () => {
                     </div>
                   )}
                 </Button>
-                <p className="text-xs text-white/60 text-center mt-3">
+                <p className="text-xs text-white/60 text-center mt-2">
                   By completing your order, you agree to our Terms of Service and Privacy Policy.
                 </p>
               </div>
             </div>
 
             {/* Security Badge */}
-            <div className="mt-4 bg-[#1a1a1a] p-4 rounded-lg border border-[#EA2831]/20">
-              <div className="flex items-center justify-center space-x-2 text-sm text-white/70">
-                <svg className="w-4 h-4 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
+            <div className="mt-3 bg-[#1a1a1a] p-3 rounded-lg border border-[#EA2831]/20">
+              <div className="flex items-center justify-center space-x-2 text-xs text-white/70">
+                <svg className="w-3 h-3 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
                 <span>Secure 256-bit SSL encryption</span>
