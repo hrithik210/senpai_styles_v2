@@ -25,18 +25,38 @@ interface Order {
   id: string
   status: string
   total: number
+  subtotal: number
+  shipping: number
+  tax: number
+  paymentMethod: string
+  paymentStatus: string
   createdAt: string
   user: {
     email: string
     firstName: string
     lastName: string
+    phone?: string
+  }
+  address: {
+    firstName: string
+    lastName: string
+    address: string
+    apartment?: string
+    city: string
+    state: string
+    zipCode: string
+    country: string
+    phone?: string
   }
   orderItems: Array<{
+    id: string
     quantity: number
     size: string
     price: number
     product: {
+      id: string
       name: string
+      image: string
     }
   }>
 }
@@ -157,7 +177,7 @@ const Dashboard = () => {
                   <div 
                     key={order.id} 
                     className="flex items-center justify-between p-4 bg-black/30 rounded-lg hover:bg-black/50 cursor-pointer transition-colors"
-                    onClick={() => handleOrderClick(order.id)}
+                    onClick={() => fetchOrderDetails(order.id)}
                   >
                     <div>
                       <p className="font-medium text-sm">#{order.id.slice(-8)}</p>
@@ -227,6 +247,15 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+
+      {/* Order Detail Modal */}
+      {selectedOrder && (
+        <OrderDetailModal
+          order={selectedOrder}
+          isOpen={showOrderModal}
+          onClose={closeOrderModal}
+        />
+      )}
     </div>
   )
 }
