@@ -56,9 +56,8 @@ const CheckoutPage = () => {
   }
 
   const subtotal = getSubtotal()
-  const shipping = 9.99
-  const tax = subtotal * 0.08
-  const total = subtotal + shipping + tax
+  const shipping = 49
+  const total = subtotal + shipping
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -293,7 +292,7 @@ const CheckoutPage = () => {
                       <p className="text-white/70 text-xs">Qty: {item.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-sm">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="font-bold text-sm">₹{(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
@@ -303,19 +302,15 @@ const CheckoutPage = () => {
               <div className="border-t border-[#EA2831]/20 pt-3 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-white/70">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-white/70">Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-white/70">Tax</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>₹{shipping.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-base font-bold pt-2 border-t border-[#EA2831]/20">
                   <span>Total</span>
-                  <span className="text-[#EA2831]">${total.toFixed(2)}</span>
+                  <span className="text-[#EA2831]">₹{total.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -327,7 +322,7 @@ const CheckoutPage = () => {
                   className="w-full relative group bg-[#EA2831] text-white font-bold py-4 px-6 rounded-xl hover:scale-105 transition-all duration-300 overflow-hidden text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10">
-                    {isProcessing ? 'Processing...' : `Complete Order - $${total.toFixed(2)}`}
+                    {isProcessing ? 'Processing...' : `Complete Order - ₹${total.toFixed(2)}`}
                   </span>
                   {isProcessing && (
                     <div className="absolute inset-0 bg-[#EA2831]/80 flex items-center justify-center">

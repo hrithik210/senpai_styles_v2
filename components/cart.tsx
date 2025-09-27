@@ -27,7 +27,7 @@ const Cart = () => {
                 />
                 <div className='min-w-0 flex-1'>
                     <h2 className="font-bold text-base md:text-lg truncate">{item.name}</h2>
-                    <p className="text-[#ffffff]/70 text-sm md:text-base">${item.price}</p>
+                    <p className="text-[#ffffff]/70 text-sm md:text-base">₹{item.price}</p>
                 </div>
             </div>
 
@@ -78,7 +78,7 @@ const Cart = () => {
             <div className="w-full md:w-auto min-w-[280px] md:min-w-[320px] pt-6 border-t border-[#EA2831]/20">
                 <div className="text-right space-y-2">
                     <p className="text-base md:text-lg text-text-color/80">
-                      Subtotal: <span className="font-bold text-text-color">${getSubtotal().toFixed(2)}</span>
+                      Subtotal: <span className="font-bold text-text-color">₹{getSubtotal().toFixed(2)}</span>
                     </p>
                     <p className="text-xs md:text-sm text-text-color/60">
                       Taxes and shipping calculated at checkout.
