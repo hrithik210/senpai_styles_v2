@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { Button } from './ui/button'
+import Link from 'next/link'
 
 const Cart = () => {
   const [quantity, setQuantity] = useState<number>(1)
@@ -82,11 +83,13 @@ const Cart = () => {
             </div>
 
             <div className="mt-6 md:mt-8 w-full md:w-auto">
-                <Button
-                  className="w-full md:w-auto relative group bg-[#EA2831] text-white font-bold py-6 md:py-8 px-8 md:px-10 rounded-xl hover:scale-105 md:hover:scale-110 transition-all duration-300 overflow-hidden text-base md:text-lg tracking-wide"
-                >
-                  <span className="relative z-10">Checkout with Razorpay</span>
-                </Button>
+                <Link href={"/checkout"}>
+                    <Button 
+                    className="w-full md:w-auto relative group bg-[#EA2831] text-white font-bold py-6 md:py-8 px-8 md:px-10 rounded-xl hover:scale-105 md:hover:scale-110 transition-all duration-300 overflow-hidden text-base md:text-lg tracking-wide"
+                    >
+                    <span className="relative z-10">Checkout with Razorpay</span>
+                    </Button>
+                </Link>
             </div>
         </div>
     </div>
