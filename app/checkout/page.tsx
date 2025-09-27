@@ -289,7 +289,7 @@ const CheckoutPage = () => {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-medium text-xs">{item.name}</h3>
-                      <p className="text-white/70 text-xs">Qty: {item.quantity}</p>
+                      <p className="text-white/70 text-xs">Qty: {item.quantity} • Size: {item.size}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-sm">₹{(item.price * item.quantity).toFixed(2)}</p>

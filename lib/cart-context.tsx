@@ -7,11 +7,13 @@ interface CartItem {
   price: number
   quantity: number
   image: string
+  size: string
 }
 
 interface CartContextType {
   items: CartItem[]
   updateQuantity: (id: number, quantity: number) => void
+  updateSize: (id: number, size: string) => void
   addItem: (item: Omit<CartItem, 'quantity'>) => void
   removeItem: (id: number) => void
   getTotalItems: () => number
@@ -27,7 +29,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       name: "The Forbidden Flame Tee",
       price: 899,
       quantity: 1,
-      image: "/product.png"
+      image: "/product.png",
+      size: "M"
     }
   ])
 
@@ -36,6 +39,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       prev.map(item => 
         item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item
       ).filter(item => item.quantity > 0)
+    )
+  }
+
+  const updateSize = (id: number, size: string) => {
+    setItems(prev => 
+      prev.map(item => 
+        item.id === id ? { ...item, size } : item
+      )
     )
   }
 
@@ -70,6 +81,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     <CartContext.Provider value={{
       items,
       updateQuantity,
+      updateSize,
       addItem,
       removeItem,
       getTotalItems,
