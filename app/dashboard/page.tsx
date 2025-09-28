@@ -22,7 +22,7 @@ interface DashboardStats {
 }
 
 interface Order {
-  id: string
+  id: number
   status: string
   total: number
   subtotal: number
@@ -68,8 +68,61 @@ const Dashboard = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [orderDetailLoading, setOrderDetailLoading] = useState(false)
   const [showOrderModal, setShowOrderModal] = useState(false)
+  const [admin, setAdmin] = useState<{ id: string; email: string; name?: string } | null>(null)
+  const [updatingOrderId, setUpdatingOrderId] = useState<number | null>(null)
 
-  const fetchOrderDetails = async (orderId: string) => {
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+      })
+      window.location.href = '/admin/login'
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  }
+
+  const updateOrderStatus = async (orderId: number, newStatus: string) => {
+    setUpdatingOrderId(orderId)
+    
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        // Update the order in the local state
+        setOrders(prevOrders => 
+          prevOrders.map(order => 
+            order.id === orderId 
+              ? { ...order, status: newStatus }
+              : order
+          )
+        )
+        
+        // Also update the selected order if it's the same one
+        if (selectedOrder && selectedOrder.id === orderId) {
+          setSelectedOrder(prev => prev ? { ...prev, status: newStatus } : null)
+        }
+      } else {
+        console.error('Failed to update order status:', result.error)
+        alert('Failed to update order status: ' + result.error)
+      }
+    } catch (error) {
+      console.error('Error updating order status:', error)
+      alert('Failed to update order status. Please try again.')
+    } finally {
+      setUpdatingOrderId(null)
+    }
+  }
+
+  const fetchOrderDetails = async (orderId: number) => {
     setOrderDetailLoading(true)
     try {
       const response = await fetch(`/api/orders/${orderId}`)
@@ -94,6 +147,17 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Verify admin session
+        const adminResponse = await fetch('/api/admin/verify')
+        const adminResult = await adminResponse.json()
+        
+        if (!adminResult.success) {
+          window.location.href = '/admin/login'
+          return
+        }
+        
+        setAdmin(adminResult.admin)
+        
         // Fetch dashboard statistics
         const statsResponse = await fetch('/api/dashboard/stats')
         const statsResult = await statsResponse.json()
@@ -135,10 +199,30 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-orbitron text-3xl md:text-4xl lg:text-5xl font-bold tracking-wider">
-            Dashboard
-          </h1>
-          <p className="text-white/70 mt-2">Business overview and analytics</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-orbitron text-3xl md:text-4xl lg:text-5xl font-bold tracking-wider">
+                Dashboard
+              </h1>
+              <p className="text-white/70 mt-2">Business overview and analytics</p>
+            </div>
+            
+            {admin && (
+              <div className="flex items-center space-x-4">
+                <div className="text-right">
+                  <p className="text-sm text-white/70">Welcome back,</p>
+                  <p className="font-medium">{admin.name || admin.email}</p>
+                </div>
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="border-[#EA2831]/50 text-[#EA2831] hover:bg-[#EA2831]/10"
+                >
+                  Logout
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -176,27 +260,44 @@ const Dashboard = () => {
                 {orders.map((order) => (
                   <div 
                     key={order.id} 
-                    className="flex items-center justify-between p-4 bg-black/30 rounded-lg hover:bg-black/50 cursor-pointer transition-colors"
-                    onClick={() => fetchOrderDetails(order.id)}
+                    className="flex items-center justify-between p-4 bg-black/30 rounded-lg hover:bg-black/50 transition-colors"
                   >
-                    <div>
-                      <p className="font-medium text-sm">#{order.id.slice(-8)}</p>
+                    <div 
+                      className="flex-1 cursor-pointer"
+                      onClick={() => fetchOrderDetails(order.id)}
+                    >
+                      <p className="font-medium text-sm">#{String(order.id).padStart(6, '0')}</p>
                       <p className="text-xs text-white/70">{order.user.email}</p>
                       <p className="text-xs text-white/50">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold text-sm">₹{order.total.toFixed(2)}</p>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        order.status === 'PENDING' ? 'bg-yellow-500/20 text-yellow-400' :
-                        order.status === 'CONFIRMED' ? 'bg-blue-500/20 text-blue-400' :
-                        order.status === 'SHIPPED' ? 'bg-purple-500/20 text-purple-400' :
-                        order.status === 'DELIVERED' ? 'bg-green-500/20 text-green-400' :
-                        'bg-gray-500/20 text-gray-400'
-                      }`}>
-                        {order.status}
-                      </span>
+                    <div className="flex items-center space-x-3">
+                      <div className="text-right">
+                        <p className="font-bold text-sm">₹{order.total.toFixed(2)}</p>
+                      </div>
+                      <select
+                        value={order.status}
+                        onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        className={`text-xs px-2 py-1 rounded-full bg-black border-none outline-none cursor-pointer ${
+                          order.status === 'PENDING' ? 'text-yellow-400' :
+                          order.status === 'CONFIRMED' ? 'text-blue-400' :
+                          order.status === 'PROCESSING' ? 'text-purple-400' :
+                          order.status === 'SHIPPED' ? 'text-indigo-400' :
+                          order.status === 'DELIVERED' ? 'text-green-400' :
+                          order.status === 'CANCELLED' ? 'text-red-400' :
+                          'text-gray-400'
+                        }`}
+                        disabled={updatingOrderId === order.id}
+                      >
+                        <option value="PENDING">PENDING</option>
+                        <option value="CONFIRMED">CONFIRMED</option>
+                        <option value="PROCESSING">PROCESSING</option>
+                        <option value="SHIPPED">SHIPPED</option>
+                        <option value="DELIVERED">DELIVERED</option>
+                        <option value="CANCELLED">CANCELLED</option>
+                      </select>
                     </div>
                   </div>
                 ))}
@@ -254,6 +355,7 @@ const Dashboard = () => {
           order={selectedOrder}
           isOpen={showOrderModal}
           onClose={closeOrderModal}
+          onStatusUpdate={updateOrderStatus}
         />
       )}
     </div>

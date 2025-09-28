@@ -4,6 +4,49 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/lib/cart-context'
 
+const indianStatesAndUTs = [
+  // States
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+
+  // Union Territories
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry"
+];
+
+
 const CheckoutPage = () => {
   const { items: cartItems, getSubtotal } = useCart()
   const [formData, setFormData] = useState({
@@ -15,7 +58,7 @@ const CheckoutPage = () => {
     city: '',
     state: '',
     zipCode: '',
-    country: 'United States',
+    country: 'India',
     phone: '',
     sameAsShipping: true,
     billingAddress: '',
@@ -23,14 +66,109 @@ const CheckoutPage = () => {
     billingCity: '',
     billingState: '',
     billingZipCode: '',
-    billingCountry: 'United States',
+    billingCountry: 'India',
     paymentMethod: 'razorpay'
   })
 
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [isProcessing, setIsProcessing] = useState(false)
+
+  // Validation functions
+  const validateEmail = (email: string): string => {
+    if (!email) return 'Email is required'
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) return 'Please enter a valid email address'
+    return ''
+  }
+
+  const validatePhone = (phone: string): string => {
+    if (!phone) return 'Phone number is required'
+    const phoneRegex = /^[6-9]\d{9}$/
+    if (!phoneRegex.test(phone.replace(/[\s-()]/g, ''))) {
+      return 'Please enter a valid 10-digit Indian mobile number'
+    }
+    return ''
+  }
+
+  const validateName = (name: string, fieldName: string): string => {
+    if (!name) return `${fieldName} is required`
+    if (name.length < 2) return `${fieldName} must be at least 2 characters`
+    if (name.length > 50) return `${fieldName} must be less than 50 characters`
+    if (!/^[a-zA-Z\s]+$/.test(name)) return `${fieldName} can only contain letters and spaces`
+    return ''
+  }
+
+  const validateAddress = (address: string): string => {
+    if (!address) return 'Address is required'
+    if (address.length < 10) return 'Please enter a complete address'
+    if (address.length > 200) return 'Address is too long'
+    return ''
+  }
+
+  const validateCity = (city: string): string => {
+    if (!city) return 'City is required'
+    if (city.length < 2) return 'Please enter a valid city name'
+    if (!/^[a-zA-Z\s]+$/.test(city)) return 'City can only contain letters and spaces'
+    return ''
+  }
+
+  const validateState = (state: string): string => {
+    if (!state) return 'State is required'
+    if (!indianStatesAndUTs.includes(state)) return 'Please select a valid state'
+    return ''
+  }
+
+  const validateZipCode = (zipCode: string): string => {
+    if (!zipCode) return 'PIN code is required'
+    const zipRegex = /^[1-9][0-9]{5}$/
+    if (!zipRegex.test(zipCode)) return 'Please enter a valid 6-digit PIN code'
+    return ''
+  }
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {}
+
+    // Validate required fields
+    newErrors.email = validateEmail(formData.email)
+    newErrors.firstName = validateName(formData.firstName, 'First name')
+    newErrors.lastName = validateName(formData.lastName, 'Last name')
+    newErrors.address = validateAddress(formData.address)
+    newErrors.city = validateCity(formData.city)
+    newErrors.state = validateState(formData.state)
+    newErrors.zipCode = validateZipCode(formData.zipCode)
+    newErrors.phone = validatePhone(formData.phone)
+
+    // Validate billing address if different from shipping
+    if (!formData.sameAsShipping) {
+      newErrors.billingAddress = validateAddress(formData.billingAddress)
+      newErrors.billingCity = validateCity(formData.billingCity)
+      newErrors.billingState = validateState(formData.billingState)
+      newErrors.billingZipCode = validateZipCode(formData.billingZipCode)
+    }
+
+    // Remove empty errors
+    Object.keys(newErrors).forEach(key => {
+      if (!newErrors[key]) delete newErrors[key]
+    })
+
+    setErrors(newErrors)
+    
+    // Scroll to first error field
+    if (Object.keys(newErrors).length > 0) {
+      const firstErrorField = Object.keys(newErrors)[0]
+      const element = document.getElementById(firstErrorField)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        element.focus()
+      }
+    }
+    
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
+    
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked
       setFormData(prev => ({
@@ -38,15 +176,46 @@ const CheckoutPage = () => {
         [name]: checked
       }))
     } else {
+      let processedValue = value
+      
+      // Format phone number - remove non-digits and limit to 10 digits
+      if (name === 'phone') {
+        processedValue = value.replace(/\D/g, '').slice(0, 10)
+      }
+      
+      // Format PIN code - remove non-digits and limit to 6 digits
+      if (name === 'zipCode' || name === 'billingZipCode') {
+        processedValue = value.replace(/\D/g, '').slice(0, 6)
+      }
+      
+      // Format names - remove numbers and special characters except spaces
+      if (name === 'firstName' || name === 'lastName') {
+        processedValue = value.replace(/[^a-zA-Z\s]/g, '')
+      }
+      
       setFormData(prev => ({
         ...prev,
-        [name]: value
+        [name]: processedValue
       }))
+      
+      // Clear error when user starts typing
+      if (errors[name]) {
+        setErrors(prev => ({
+          ...prev,
+          [name]: ''
+        }))
+      }
     }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return
+    }
+    
     setIsProcessing(true)
     
     try {
@@ -116,6 +285,23 @@ const CheckoutPage = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Contact Information */}
             <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#EA2831]/20">
+              {/* Form Validation Summary */}
+              {Object.keys(errors).length > 0 && (
+                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                  <div className="flex items-center space-x-2 text-red-400">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-sm font-medium">Please fill these missing fields:</p>
+                  </div>
+                  <ul className="mt-2 text-xs text-red-300 space-y-1">
+                    {Object.entries(errors).map(([field, error]) => (
+                      <li key={field}>• {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
               <h2 className="font-orbitron text-lg font-bold mb-4 text-[#EA2831]">Contact Information</h2>
               <div className="space-y-3">
                 <div>
@@ -128,10 +314,17 @@ const CheckoutPage = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                    className={`w-full px-3 py-2 bg-black border rounded-lg focus:outline-none transition-colors text-sm ${
+                      errors.email 
+                        ? 'border-red-500 focus:border-red-500' 
+                        : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                    }`}
                     placeholder="your.email@example.com"
                     required
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -151,9 +344,16 @@ const CheckoutPage = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                      className={`w-full px-3 py-2 bg-black border rounded-lg focus:outline-none transition-colors text-sm ${
+                        errors.firstName 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                      }`}
                       required
                     />
+                    {errors.firstName && (
+                      <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="lastName" className="block text-sm font-medium mb-1">
@@ -165,9 +365,16 @@ const CheckoutPage = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                      className={`w-full px-3 py-2 bg-black border rounded-lg focus:outline-none transition-colors text-sm ${
+                        errors.lastName 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                      }`}
                       required
                     />
+                    {errors.lastName && (
+                      <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+                    )}
                   </div>
                 </div>
 
@@ -181,10 +388,17 @@ const CheckoutPage = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                    className={`w-full px-3 py-2 bg-black border rounded-lg focus:outline-none transition-colors text-sm ${
+                      errors.address 
+                        ? 'border-red-500 focus:border-red-500' 
+                        : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                    }`}
                     placeholder="123 Main Street"
                     required
                   />
+                  {errors.address && (
+                    <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+                  )}
                 </div>
 
                 <div>
@@ -213,9 +427,16 @@ const CheckoutPage = () => {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                      className={`w-full px-3 py-2 bg-black border rounded-lg focus:outline-none transition-colors text-sm ${
+                        errors.city 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                      }`}
                       required
                     />
+                    {errors.city && (
+                      <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="state" className="block text-sm font-medium mb-1">
@@ -226,20 +447,25 @@ const CheckoutPage = () => {
                       name="state"
                       value={formData.state}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                      className={`w-full px-3 py-2 bg-black border rounded-lg focus:outline-none transition-colors text-sm ${
+                        errors.state 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                      }`}
                       required
                     >
-                      <option value="">Select State</option>
-                      <option value="CA">California</option>
-                      <option value="NY">New York</option>
-                      <option value="TX">Texas</option>
-                      <option value="FL">Florida</option>
-                      {/* Add more states as needed */}
+                      <option value="" disabled>Select State</option>
+                      {indianStatesAndUTs.map((state) => (
+                        <option key={state} value={state}>{state}</option>
+                      ))}
                     </select>
+                    {errors.state && (
+                      <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="zipCode" className="block text-sm font-medium mb-1">
-                      ZIP Code <span className="text-[#EA2831]">*</span>
+                      PIN Code <span className="text-[#EA2831]">*</span>
                     </label>
                     <input
                       type="text"
@@ -247,15 +473,24 @@ const CheckoutPage = () => {
                       name="zipCode"
                       value={formData.zipCode}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                      className={`w-full px-3 py-2 bg-black border rounded-lg focus:outline-none transition-colors text-sm ${
+                        errors.zipCode 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                      }`}
+                      placeholder="110001"
+                      maxLength={6}
                       required
                     />
+                    {errors.zipCode && (
+                      <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>
+                    )}
                   </div>
                 </div>
 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium mb-1">
-                    Phone Number
+                    Phone Number <span className="text-[#EA2831]">*</span>
                   </label>
                   <div className="flex">
                     <span className="px-3 py-2 bg-[#1a1a1a] border border-[#EA2831]/30 border-r-0 rounded-l-lg flex items-center text-white/70 text-sm">
@@ -267,10 +502,24 @@ const CheckoutPage = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="flex-1 px-3 py-2 bg-black border border-[#EA2831]/30 rounded-r-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                      className={`flex-1 px-3 py-2 bg-black border border-r-0 focus:outline-none transition-colors text-sm ${
+                        errors.phone 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#EA2831]/30 focus:border-[#EA2831]'
+                      }`}
                       placeholder="9876543210"
+                      maxLength={10}
+                      required
                     />
+                    <div className={`w-3 border border-l-0 rounded-r-lg ${
+                      errors.phone 
+                        ? 'border-red-500' 
+                        : 'border-[#EA2831]/30'
+                    }`}></div>
                   </div>
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                  )}
                 </div>
               </form>
             </div>

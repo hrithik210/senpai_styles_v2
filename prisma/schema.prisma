@@ -65,7 +65,7 @@ model Product {
 }
 
 model Order {
-  id            String      @id @default(cuid())
+  id            Int         @id @default(autoincrement())
   userId        String
   addressId     String
   status        OrderStatus @default(PENDING)
@@ -87,7 +87,7 @@ model Order {
 
 model OrderItem {
   id        String @id @default(cuid())
-  orderId   String
+  orderId   Int
   productId String
   quantity  Int
   size      String
@@ -113,4 +113,16 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // This will store hashed passwords
+  name      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("admins")
 }

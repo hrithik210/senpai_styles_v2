@@ -4,8 +4,9 @@ import React from 'react'
 interface OrderDetailModalProps {
   isOpen: boolean
   onClose: () => void
+  onStatusUpdate?: (orderId: number, newStatus: string) => Promise<void>
   order: {
-    id: string
+    id: number
     status: string
     total: number
     subtotal: number
@@ -45,8 +46,18 @@ interface OrderDetailModalProps {
   } | null
 }
 
-const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, order }) => {
+const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, onStatusUpdate, order }) => {
   if (!isOpen || !order) return null
+
+  const handleStatusChange = async (newStatus: string) => {
+    if (onStatusUpdate) {
+      try {
+        await onStatusUpdate(order.id, newStatus)
+      } catch (error) {
+        console.error('Failed to update status:', error)
+      }
+    }
+  }
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -64,7 +75,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
         <div className="sticky top-0 bg-[#1a1a1a] border-b border-[#EA2831]/20 p-6 flex justify-between items-center">
           <div>
             <h2 className="font-orbitron text-xl font-bold text-[#EA2831]">Order Details</h2>
-            <p className="text-sm text-white/70">Order #{order.id.slice(-8)}</p>
+            <p className="text-sm text-white/70">Order #{String(order.id).padStart(6, '0')}</p>
           </div>
           <button
             onClick={onClose}
@@ -81,17 +92,36 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, or
         <div className="p-6 space-y-6">
           {/* Order Status & Date */}
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-            <div>
+            <div className="flex items-center gap-4">
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 order.status === 'PENDING' ? 'bg-yellow-500/20 text-yellow-400' :
                 order.status === 'CONFIRMED' ? 'bg-blue-500/20 text-blue-400' :
                 order.status === 'PROCESSING' ? 'bg-purple-500/20 text-purple-400' :
                 order.status === 'SHIPPED' ? 'bg-orange-500/20 text-orange-400' :
                 order.status === 'DELIVERED' ? 'bg-green-500/20 text-green-400' :
+                order.status === 'CANCELLED' ? 'bg-red-500/20 text-red-400' :
                 'bg-gray-500/20 text-gray-400'
               }`}>
                 {order.status}
               </span>
+              
+              {onStatusUpdate && (
+                <div>
+                  <label className="text-xs text-white/50 block mb-1">Update Status</label>
+                  <select
+                    value={order.status}
+                    onChange={(e) => handleStatusChange(e.target.value)}
+                    className="bg-black/50 border border-[#EA2831]/20 rounded px-3 py-1 text-sm text-white focus:outline-none focus:border-[#EA2831]/50"
+                  >
+                    <option value="PENDING">PENDING</option>
+                    <option value="CONFIRMED">CONFIRMED</option>
+                    <option value="PROCESSING">PROCESSING</option>
+                    <option value="SHIPPED">SHIPPED</option>
+                    <option value="DELIVERED">DELIVERED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                  </select>
+                </div>
+              )}
             </div>
             <div className="text-sm text-white/70">
               Ordered on {new Date(order.createdAt).toLocaleString()}
