@@ -267,7 +267,7 @@ const CheckoutPage = () => {
 
   const subtotal = getSubtotal()
   const shipping = 49
-  const total = subtotal + shipping
+  const total = subtotal
 
   return (
     <div className="min-h-screen bg-black text-white">
