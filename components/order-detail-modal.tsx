@@ -4,9 +4,9 @@ import React from 'react'
 interface OrderDetailModalProps {
   isOpen: boolean
   onClose: () => void
-  onStatusUpdate?: (orderId: number, newStatus: string) => Promise<void>
+  onStatusUpdate?: (orderId: string, newStatus: string) => Promise<void>
   order: {
-    id: number
+    id: string
     status: string
     total: number
     subtotal: number

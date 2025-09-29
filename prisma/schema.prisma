@@ -65,7 +65,7 @@ model Product {
 }
 
 model Order {
-  id            Int         @id @default(autoincrement())
+  id            String      @id @default(cuid())
   userId        String
   addressId     String
   status        OrderStatus @default(PENDING)
@@ -73,7 +73,7 @@ model Order {
   shipping      Float       @default(0)
   tax           Float       @default(0)
   total         Float
-  paymentMethod String      @default("razorpay")
+  paymentMethod String      @default("cashfree")
   paymentStatus PaymentStatus @default(PENDING)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -87,7 +87,7 @@ model Order {
 
 model OrderItem {
   id        String @id @default(cuid())
-  orderId   Int
+  orderId   String
   productId String
   quantity  Int
   size      String

@@ -67,7 +67,7 @@ const CheckoutPage = () => {
     billingState: '',
     billingZipCode: '',
     billingCountry: 'India',
-    paymentMethod: 'razorpay'
+    paymentMethod: 'cashfree'
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -531,16 +531,16 @@ const CheckoutPage = () => {
                 <div className="flex items-center space-x-3 p-3 border border-[#EA2831]/30 rounded-lg bg-[#EA2831]/10">
                   <input
                     type="radio"
-                    id="razorpay"
+                    id="cashfree"
                     name="paymentMethod"
-                    value="razorpay"
-                    checked={formData.paymentMethod === 'razorpay'}
+                    value="cashfree"
+                    checked={formData.paymentMethod === 'cashfree'}
                     onChange={handleInputChange}
                     className="w-4 h-4 text-[#EA2831] bg-black border-[#EA2831]/30 focus:ring-[#EA2831] focus:ring-2"
                   />
-                  <label htmlFor="razorpay" className="flex-1">
+                  <label htmlFor="cashfree" className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">Razorpay</span>
+                      <span className="font-medium text-sm">cashfree</span>
                       <div className="flex space-x-2">
                         <span className="text-xs bg-[#EA2831] text-white px-2 py-1 rounded">
                           Secure

@@ -22,7 +22,7 @@ interface DashboardStats {
 }
 
 interface Order {
-  id: number
+  id: string
   status: string
   total: number
   subtotal: number
@@ -69,7 +69,7 @@ const Dashboard = () => {
   const [orderDetailLoading, setOrderDetailLoading] = useState(false)
   const [showOrderModal, setShowOrderModal] = useState(false)
   const [admin, setAdmin] = useState<{ id: string; email: string; name?: string } | null>(null)
-  const [updatingOrderId, setUpdatingOrderId] = useState<number | null>(null)
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null)
 
   const handleLogout = async () => {
     try {
@@ -82,7 +82,7 @@ const Dashboard = () => {
     }
   }
 
-  const updateOrderStatus = async (orderId: number, newStatus: string) => {
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
     setUpdatingOrderId(orderId)
     
     try {
@@ -122,7 +122,7 @@ const Dashboard = () => {
     }
   }
 
-  const fetchOrderDetails = async (orderId: number) => {
+  const fetchOrderDetails = async (orderId: string) => {
     setOrderDetailLoading(true)
     try {
       const response = await fetch(`/api/orders/${orderId}`)

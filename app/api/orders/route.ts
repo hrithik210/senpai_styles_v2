@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       shipping = 0,
       tax = 0,
       total,
-      paymentMethod = 'razorpay'
+      paymentMethod = 'cashfree'
     } = body
 
     // Create or find user

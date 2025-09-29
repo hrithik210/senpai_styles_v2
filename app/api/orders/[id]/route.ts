@@ -7,9 +7,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const orderId = await parseInt(params.id)
+    const orderId = params.id
     
-    if (isNaN(orderId)) {
+    if (!orderId) {
       return NextResponse.json(
         { success: false, error: 'Invalid order ID' },
         { status: 400 }
@@ -77,9 +77,9 @@ export async function PATCH(
       )
     }
 
-    const orderId = await parseInt(params.id)
+    const orderId = params.id
     
-    if (isNaN(orderId)) {
+    if (!orderId) {
       return NextResponse.json(
         { success: false, error: 'Invalid order ID' },
         { status: 400 }
