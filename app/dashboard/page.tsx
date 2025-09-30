@@ -330,6 +330,9 @@ const Dashboard = () => {
                           'bg-red-500/20 text-red-300'
                         }`}>
                           {order.paymentStatus}
+                          {order.paymentMethod === 'ONLINE' && order.paymentStatus === 'PENDING' && (
+                            <span className="ml-1 text-xs opacity-70">(Auto)</span>
+                          )}
                         </span>
                       </div>
                     </div>

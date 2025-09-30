@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const orderId = await params.id
+    const { id: orderId } = await params
     
     if (!orderId) {
       return NextResponse.json(
@@ -55,7 +55,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin authentication
@@ -77,7 +77,7 @@ export async function PATCH(
       )
     }
 
-    const orderId = await params.id
+    const { id: orderId } = await params
     
     if (!orderId) {
       return NextResponse.json(

@@ -228,7 +228,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, on
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/70">Payment Status:</span>
-                {onPaymentStatusUpdate ? (
+                {onPaymentStatusUpdate && order.paymentMethod === 'COD' ? (
                   <select
                     value={order.paymentStatus}
                     onChange={(e) => handlePaymentStatusChange(e.target.value)}
@@ -245,18 +245,23 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, on
                     <option value="REFUNDED">REFUNDED</option>
                   </select>
                 ) : (
-                  <span className={`px-2 py-1 rounded text-xs ${
-                    order.paymentStatus === 'PAID' ? 'bg-green-500/20 text-green-400' :
-                    order.paymentStatus === 'PENDING' ? 'bg-yellow-500/20 text-yellow-400' :
-                    order.paymentStatus === 'FAILED' ? 'bg-red-500/20 text-red-400' :
-                    'bg-gray-500/20 text-gray-400'
-                  }`}>
-                    {order.paymentStatus}
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      order.paymentStatus === 'PAID' ? 'bg-green-500/20 text-green-400' :
+                      order.paymentStatus === 'PENDING' ? 'bg-yellow-500/20 text-yellow-400' :
+                      order.paymentStatus === 'FAILED' ? 'bg-red-500/20 text-red-400' :
+                      'bg-gray-500/20 text-gray-400'
+                    }`}>
+                      {order.paymentStatus}
+                    </span>
+                    {order.paymentMethod === 'ONLINE' && (
+                      <span className="text-xs text-white/50">(Auto-managed)</span>
+                    )}
+                  </div>
                 )}
               </div>
               
-              {/* COD Instructions for admins */}
+              {/* Payment method specific instructions */}
               {order.paymentMethod === 'COD' && onPaymentStatusUpdate && (
                 <div className="mt-3 p-2 bg-amber-500/10 border border-amber-500/20 rounded text-xs">
                   <p className="text-amber-300 font-medium">COD Order Instructions:</p>
@@ -265,6 +270,15 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, on
                     <li>• Keep as PENDING until delivery is completed</li>
                     <li>• Mark as FAILED if delivery fails or customer refuses</li>
                   </ul>
+                </div>
+              )}
+              
+              {order.paymentMethod === 'ONLINE' && (
+                <div className="mt-3 p-2 bg-blue-500/10 border border-blue-500/20 rounded text-xs">
+                  <p className="text-blue-300 font-medium">Online Payment Info:</p>
+                  <p className="mt-1 text-blue-200">
+                    Payment status is automatically updated via Cashfree webhooks when customer completes or fails payment.
+                  </p>
                 </div>
               )}
             </div>

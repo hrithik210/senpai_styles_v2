@@ -4,8 +4,16 @@ import cashfree from "@/lib/cashfree/cashfree";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  let orderId = 'unknown';
+  
   try {
-    const { orderId } = await request.json();
+    console.log('🚀 [CASHFREE SESSION] Request received at:', new Date().toISOString());
+    
+    const requestBody = await request.json();
+    orderId = requestBody.orderId;
+    
+    console.log('📋 [CASHFREE SESSION] Processing order:', orderId);
 
     const order = await prisma.order.findUnique({
       where: { id: orderId },
@@ -21,11 +29,19 @@ export async function POST(request: NextRequest) {
     });
 
     if (!order) {
+      console.error('❌ [CASHFREE SESSION] Order not found:', orderId);
       return NextResponse.json(
         { success: false, error: "Order not found" },
         { status: 404 }
       );
     }
+
+    console.log('✅ [CASHFREE SESSION] Order found:', {
+      orderId: order.id,
+      amount: order.total,
+      paymentMethod: order.paymentMethod,
+      userEmail: order.user.email
+    });
 
     // Validate required order data
     if (!order.user.email) {
@@ -69,9 +85,15 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    console.log("Cashfree order data:", JSON.stringify(cashfreeOrderData, null, 2));
+    console.log("💳 [CASHFREE SESSION] Sending order data to Cashfree:", JSON.stringify(cashfreeOrderData, null, 2));
+    console.log("🔗 [CASHFREE SESSION] Webhook URL:", cashfreeOrderData.order_meta.notify_url);
 
+    const apiCallStart = Date.now();
     const response = await cashfree.post("/pg/orders", cashfreeOrderData);
+    const apiCallDuration = Date.now() - apiCallStart;
+    
+    console.log("✅ [CASHFREE SESSION] API call successful in", apiCallDuration, "ms");
+    console.log("📦 [CASHFREE SESSION] Response data:", JSON.stringify(response.data, null, 2));
 
     await prisma.order.update({
       where: { id: orderId },
@@ -80,8 +102,14 @@ export async function POST(request: NextRequest) {
         paymentSessionId: response.data.payment_session_id
       }
     })
+    
+    console.log("💾 [CASHFREE SESSION] Database updated with:", {
+      orderId,
+      cashfreeOrderId: response.data.cf_order_id,
+      paymentSessionId: response.data.payment_session_id
+    });
 
-    console.log("cashfree response:", response)
+    console.log("🎯 [CASHFREE SESSION] Total processing time:", Date.now() - startTime, "ms");
 
     return NextResponse.json({
       success: true,
@@ -90,12 +118,20 @@ export async function POST(request: NextRequest) {
       cf_order_id: response.data.cf_order_id
     })
   } catch (error: any) {
-    console.error('Cashfree session creation error:', error)
+    const errorTime = Date.now() - startTime;
+    console.error('❌ [CASHFREE SESSION] Error occurred after', errorTime, 'ms for order:', orderId);
+    console.error('❌ [CASHFREE SESSION] Error details:', error);
     
     // Log detailed error information
     if (error.response) {
-      console.error('Cashfree API Error Response:', error.response.data)
-      console.error('Status:', error.response.status)
+      console.error('❌ [CASHFREE SESSION] API Error Response:', JSON.stringify(error.response.data, null, 2));
+      console.error('❌ [CASHFREE SESSION] Status Code:', error.response.status);
+      console.error('❌ [CASHFREE SESSION] Headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('❌ [CASHFREE SESSION] Network Error - No response received');
+      console.error('❌ [CASHFREE SESSION] Request details:', error.request);
+    } else {
+      console.error('❌ [CASHFREE SESSION] Setup Error:', error.message);
     }
     
     return NextResponse.json(

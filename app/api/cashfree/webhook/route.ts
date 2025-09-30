@@ -21,16 +21,23 @@ function verifyCashfreeSignature(
 }
 
 export async function POST(request: NextRequest) {
+  const webhookStartTime = Date.now();
+  const requestId = `webhook_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
   try {
+    console.log('🎯 [WEBHOOK]', requestId, 'Received at:', new Date().toISOString());
+    
     const timestamp = request.headers.get('x-webhook-timestamp') || ''
     const signature = request.headers.get('x-webhook-signature') || ''
     const rawBody = await request.text()
     
-    console.log('Cashfree webhook received:', {
+    console.log('📋 [WEBHOOK]', requestId, 'Headers and body:', {
       timestamp,
       signature: signature ? 'Present' : 'Missing',
-      bodyLength: rawBody.length
-    })
+      bodyLength: rawBody.length,
+      userAgent: request.headers.get('user-agent'),
+      body: rawBody
+    });
     
     // Verify webhook signature (recommended for production)
     if (signature && timestamp) {
@@ -46,53 +53,74 @@ export async function POST(request: NextRequest) {
     const body = JSON.parse(rawBody)
     const { type, data } = body
     
-    console.log('Webhook data:', { type, data })
+    console.log('🔍 [WEBHOOK]', requestId, 'Parsed webhook data:', { 
+      type, 
+      orderId: data?.order?.order_id || 'unknown',
+      eventData: JSON.stringify(data, null, 2)
+    });
 
     if (type === 'PAYMENT_SUCCESS_WEBHOOK') {
       const { order } = data
+      const orderId = order.order_id;
 
-      console.log(`Processing successful payment for order: ${order.order_id}`)
+      console.log(`💰 [WEBHOOK SUCCESS]`, requestId, `Processing successful payment for order: ${orderId}`);
 
       // Verify payment with Cashfree
+      console.log(`🔍 [WEBHOOK SUCCESS]`, requestId, `Verifying payment status with Cashfree API...`);
       const paymentResponse = await cashfree.get(
-        `/pg/orders/${order.order_id}/payments`
+        `/pg/orders/${orderId}/payments`
       )
 
       const payment = paymentResponse.data[0]
-      console.log('Cashfree payment details:', payment)
+      console.log(`📋 [WEBHOOK SUCCESS]`, requestId, `Cashfree payment verification result:`, {
+        paymentId: payment?.cf_payment_id,
+        status: payment?.payment_status,
+        amount: payment?.payment_amount,
+        fullDetails: JSON.stringify(payment, null, 2)
+      });
 
       if (payment && payment.payment_status === 'SUCCESS') {
+        console.log(`✅ [WEBHOOK SUCCESS]`, requestId, `Payment verified as SUCCESS, updating database...`);
+        
         // Check if order exists before updating
         const existingOrder = await prisma.order.findUnique({
-          where: { id: order.order_id }
+          where: { id: orderId },
+          select: { id: true, paymentStatus: true, status: true }
         })
         
         if (!existingOrder) {
-          console.error(`Order ${order.order_id} not found in database`)
+          console.error(`❌ [WEBHOOK SUCCESS]`, requestId, `Order ${orderId} not found in database`);
           return NextResponse.json({ 
             success: false, 
             error: 'Order not found' 
           }, { status: 404 })
         }
         
+        console.log(`📄 [WEBHOOK SUCCESS]`, requestId, `Current order state:`, existingOrder);
+        
         // Update order status
+        console.log(`💾 [WEBHOOK SUCCESS]`, requestId, `Updating order ${orderId} to PAID/CONFIRMED...`);
         const updatedOrder = await prisma.order.update({
-          where: { id: order.order_id },
+          where: { id: orderId },
           data: {
             paymentStatus: 'PAID',
             status: 'CONFIRMED'
           }
         })
         
-        console.log(`✅ Order ${order.order_id} marked as PAID and CONFIRMED`)
+        console.log(`🎉 [WEBHOOK SUCCESS]`, requestId, `Order ${orderId} successfully updated to PAID and CONFIRMED!`);
+        const totalTime = Date.now() - webhookStartTime;
+        console.log(`⏱️ [WEBHOOK SUCCESS]`, requestId, `Total processing time: ${totalTime}ms`);
         
         return NextResponse.json({ 
           success: true, 
           message: 'Payment confirmed and order updated',
-          orderId: order.order_id
+          orderId: orderId,
+          processingTime: totalTime
         })
       } else {
-        console.warn(`Payment verification failed for order ${order.order_id}:`, payment)
+        console.warn(`⚠️ [WEBHOOK SUCCESS]`, requestId, `Payment verification FAILED for order ${orderId}. Expected: SUCCESS, Got: ${payment?.payment_status}`);
+        console.warn(`⚠️ [WEBHOOK SUCCESS]`, requestId, `Full payment data:`, JSON.stringify(payment, null, 2));
         return NextResponse.json({ 
           success: false, 
           error: 'Payment verification failed' 
@@ -157,11 +185,16 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Webhook error:', error)
+    const errorTime = Date.now() - webhookStartTime;
+    console.error('❌ [WEBHOOK ERROR]', requestId, `Fatal error after ${errorTime}ms:`, error);
+    console.error('❌ [WEBHOOK ERROR]', requestId, 'Stack trace:', error instanceof Error ? error.stack : 'No stack available');
+    
     return NextResponse.json(
       { 
         error: 'Webhook processing failed',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        requestId,
+        processingTime: errorTime
       },
       { status: 500 }
     )
