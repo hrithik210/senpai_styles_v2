@@ -67,7 +67,7 @@ const CheckoutPage = () => {
     billingState: '',
     billingZipCode: '',
     billingCountry: 'India',
-    paymentMethod: 'cashfree'
+    paymentMethod: 'online'
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -251,9 +251,54 @@ const CheckoutPage = () => {
       const result = await response.json()
 
       if (result.success) {
-        alert(`Order created successfully! Order ID: ${result.order.id}`)
-        // You could redirect to a success page here
-        // router.push('/order-success')
+        if (formData.paymentMethod === 'cod') {
+          // For COD orders, show success message and redirect
+          alert(`Order placed successfully! Order ID: ${result.order.id}\n\nYour order will be delivered with Cash on Delivery option. Please keep exact change ready.`)
+          window.location.href = '/payment/success'
+        } else if (formData.paymentMethod === 'online') {
+          // For online payments, create Cashfree payment session
+          try {
+            const cashfreeResponse = await fetch('/api/cashfree/create-session', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ orderId: result.order.id }),
+            })
+
+            const cashfreeResult = await cashfreeResponse.json()
+
+            if (cashfreeResult.success) {
+              // Load Cashfree checkout and redirect to payment
+              const script = document.createElement('script')
+              script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js'
+              script.onload = () => {
+                // Initialize Cashfree Checkout
+                const cashfree = (window as any).Cashfree({
+                  mode: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox'
+                })
+
+                const checkoutOptions = {
+                  paymentSessionId: cashfreeResult.payment_session_id,
+                  returnUrl: `${window.location.origin}/payment/success?order_id=${result.order.id}`,
+                }
+
+                cashfree.checkout(checkoutOptions).then((checkoutResult: any) => {
+                  if (checkoutResult.error) {
+                    console.error('Payment failed:', checkoutResult.error)
+                    alert('Payment failed. Please try again.')
+                  }
+                })
+              }
+              document.head.appendChild(script)
+            } else {
+              throw new Error(cashfreeResult.error || 'Failed to create payment session')
+            }
+          } catch (cashfreeError) {
+            console.error('Cashfree integration error:', cashfreeError)
+            alert('Failed to initialize payment. Please try again.')
+          }
+        }
       } else {
         throw new Error(result.error || 'Failed to create order')
       }
@@ -528,19 +573,24 @@ const CheckoutPage = () => {
             <div className="bg-[#1a1a1a] p-4 rounded-lg border border-[#EA2831]/20">
               <h2 className="font-orbitron text-lg font-bold mb-4 text-[#EA2831]">Payment Method</h2>
               <div className="space-y-3">
-                <div className="flex items-center space-x-3 p-3 border border-[#EA2831]/30 rounded-lg bg-[#EA2831]/10">
+                {/* Online Payment Option */}
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg transition-all ${
+                  formData.paymentMethod === 'online' 
+                    ? 'border-[#EA2831] bg-[#EA2831]/10' 
+                    : 'border-[#EA2831]/30 bg-transparent hover:bg-[#EA2831]/5'
+                }`}>
                   <input
                     type="radio"
-                    id="cashfree"
+                    id="online"
                     name="paymentMethod"
-                    value="cashfree"
-                    checked={formData.paymentMethod === 'cashfree'}
+                    value="online"
+                    checked={formData.paymentMethod === 'online'}
                     onChange={handleInputChange}
                     className="w-4 h-4 text-[#EA2831] bg-black border-[#EA2831]/30 focus:ring-[#EA2831] focus:ring-2"
                   />
-                  <label htmlFor="cashfree" className="flex-1">
+                  <label htmlFor="online" className="flex-1 cursor-pointer">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">cashfree</span>
+                      <span className="font-medium text-sm">Online Payment</span>
                       <div className="flex space-x-2">
                         <span className="text-xs bg-[#EA2831] text-white px-2 py-1 rounded">
                           Secure
@@ -548,10 +598,59 @@ const CheckoutPage = () => {
                       </div>
                     </div>
                     <p className="text-xs text-white/70 mt-1">
-                      Pay securely with credit card, debit card, or UPI
+                      Pay instantly with credit card, debit card, UPI, or net banking
                     </p>
                   </label>
                 </div>
+
+                {/* Cash on Delivery Option */}
+                <div className={`flex items-center space-x-3 p-3 border rounded-lg transition-all ${
+                  formData.paymentMethod === 'cod' 
+                    ? 'border-[#EA2831] bg-[#EA2831]/10' 
+                    : 'border-[#EA2831]/30 bg-transparent hover:bg-[#EA2831]/5'
+                }`}>
+                  <input
+                    type="radio"
+                    id="cod"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={formData.paymentMethod === 'cod'}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-[#EA2831] bg-black border-[#EA2831]/30 focus:ring-[#EA2831] focus:ring-2"
+                  />
+                  <label htmlFor="cod" className="flex-1 cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm">Cash on Delivery</span>
+                      <div className="flex space-x-2">
+                        <span className="text-xs bg-green-600 text-white px-2 py-1 rounded">
+                          COD
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-white/70 mt-1">
+                      Pay with cash when your order is delivered to your doorstep
+                    </p>
+                  </label>
+                </div>
+
+                {/* COD Note */}
+                {formData.paymentMethod === 'cod' && (
+                  <div className="mt-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <svg className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      <div className="text-xs text-amber-300">
+                        <p className="font-medium">Important COD Information:</p>
+                        <ul className="mt-1 space-y-1 text-amber-200">
+                          <li>• Please keep exact change ready</li>
+                          <li>• COD orders are subject to verification</li>
+                          <li>• Delivery may take 1-2 additional days</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

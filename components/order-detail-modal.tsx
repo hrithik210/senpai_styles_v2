@@ -5,6 +5,7 @@ interface OrderDetailModalProps {
   isOpen: boolean
   onClose: () => void
   onStatusUpdate?: (orderId: string, newStatus: string) => Promise<void>
+  onPaymentStatusUpdate?: (orderId: string, newStatus: string) => Promise<void>
   order: {
     id: string
     status: string
@@ -46,7 +47,7 @@ interface OrderDetailModalProps {
   } | null
 }
 
-const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, onStatusUpdate, order }) => {
+const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, onStatusUpdate, onPaymentStatusUpdate, order }) => {
   if (!isOpen || !order) return null
 
   const handleStatusChange = async (newStatus: string) => {
@@ -55,6 +56,16 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, on
         await onStatusUpdate(order.id, newStatus)
       } catch (error) {
         console.error('Failed to update status:', error)
+      }
+    }
+  }
+
+  const handlePaymentStatusChange = async (newPaymentStatus: string) => {
+    if (onPaymentStatusUpdate) {
+      try {
+        await onPaymentStatusUpdate(order.id, newPaymentStatus)
+      } catch (error) {
+        console.error('Failed to update payment status:', error)
       }
     }
   }
@@ -215,16 +226,47 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, on
                 <span className="text-white/70">Payment Method:</span>
                 <span className="capitalize">{order.paymentMethod}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-white/70">Payment Status:</span>
-                <span className={`px-2 py-1 rounded text-xs ${
-                  order.paymentStatus === 'PAID' ? 'bg-green-500/20 text-green-400' :
-                  order.paymentStatus === 'PENDING' ? 'bg-yellow-500/20 text-yellow-400' :
-                  'bg-red-500/20 text-red-400'
-                }`}>
-                  {order.paymentStatus}
-                </span>
+                {onPaymentStatusUpdate ? (
+                  <select
+                    value={order.paymentStatus}
+                    onChange={(e) => handlePaymentStatusChange(e.target.value)}
+                    className={`text-xs px-2 py-1 rounded bg-black border border-[#EA2831]/30 outline-none cursor-pointer ${
+                      order.paymentStatus === 'PAID' ? 'text-green-400' :
+                      order.paymentStatus === 'PENDING' ? 'text-yellow-400' :
+                      order.paymentStatus === 'FAILED' ? 'text-red-400' :
+                      'text-gray-400'
+                    }`}
+                  >
+                    <option value="PENDING">PENDING</option>
+                    <option value="PAID">PAID</option>
+                    <option value="FAILED">FAILED</option>
+                    <option value="REFUNDED">REFUNDED</option>
+                  </select>
+                ) : (
+                  <span className={`px-2 py-1 rounded text-xs ${
+                    order.paymentStatus === 'PAID' ? 'bg-green-500/20 text-green-400' :
+                    order.paymentStatus === 'PENDING' ? 'bg-yellow-500/20 text-yellow-400' :
+                    order.paymentStatus === 'FAILED' ? 'bg-red-500/20 text-red-400' :
+                    'bg-gray-500/20 text-gray-400'
+                  }`}>
+                    {order.paymentStatus}
+                  </span>
+                )}
               </div>
+              
+              {/* COD Instructions for admins */}
+              {order.paymentMethod === 'COD' && onPaymentStatusUpdate && (
+                <div className="mt-3 p-2 bg-amber-500/10 border border-amber-500/20 rounded text-xs">
+                  <p className="text-amber-300 font-medium">COD Order Instructions:</p>
+                  <ul className="mt-1 text-amber-200 space-y-1">
+                    <li>• Mark as PAID when cash is collected during delivery</li>
+                    <li>• Keep as PENDING until delivery is completed</li>
+                    <li>• Mark as FAILED if delivery fails or customer refuses</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>

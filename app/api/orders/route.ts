@@ -21,8 +21,24 @@ export async function POST(request: NextRequest) {
       shipping = 0,
       tax = 0,
       total,
-      paymentMethod = 'cashfree'
+      paymentMethod = 'online'
     } = body
+
+    // Validate payment method
+    const validPaymentMethods = ['online', 'cod']
+    const lowerCasePaymentMethod = paymentMethod.toLowerCase()
+    if (!validPaymentMethods.includes(lowerCasePaymentMethod)) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Invalid payment method. Must be online or cod.' 
+        },
+        { status: 400 }
+      )
+    }
+
+    // Convert to enum values
+    const enumPaymentMethod = lowerCasePaymentMethod === 'online' ? 'ONLINE' : 'COD'
 
     // Create or find user
     let user = await prisma.user.findUnique({
@@ -56,7 +72,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Create order
     const order = await prisma.order.create({
       data: {
         userId: user.id,
@@ -65,10 +80,13 @@ export async function POST(request: NextRequest) {
         shipping,
         tax,
         total,
-        paymentMethod,
+        paymentMethod: enumPaymentMethod,
+        // If COD, mark as confirmed immediately; online payments stay pending until paid
+        status: enumPaymentMethod === 'COD' ? 'CONFIRMED' : 'PENDING',
+        paymentStatus: 'PENDING', // Both COD and online start as pending
         orderItems: {
           create: items.map((item: any) => ({
-            productId: 'forbidden-flame-tee', // Using the seeded product
+            productId: item.productId || 'forbidden-flame-tee',
             quantity: item.quantity,
             size: item.size,
             price: item.price
@@ -86,12 +104,12 @@ export async function POST(request: NextRequest) {
       }
     })
 
-
-
     return NextResponse.json({
       success: true,
       order,
-      message: 'Order created successfully'
+      message: enumPaymentMethod === 'COD' 
+        ? 'COD order created successfully. Payment will be collected upon delivery.' 
+        : 'Order created successfully'
     })
 
   } catch (error) {

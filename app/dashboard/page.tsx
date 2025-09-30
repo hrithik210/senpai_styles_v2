@@ -70,6 +70,7 @@ const Dashboard = () => {
   const [showOrderModal, setShowOrderModal] = useState(false)
   const [admin, setAdmin] = useState<{ id: string; email: string; name?: string } | null>(null)
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null)
+  const [updatingPaymentId, setUpdatingPaymentId] = useState<string | null>(null)
 
   const handleLogout = async () => {
     try {
@@ -119,6 +120,52 @@ const Dashboard = () => {
       alert('Failed to update order status. Please try again.')
     } finally {
       setUpdatingOrderId(null)
+    }
+  }
+
+  const updatePaymentStatus = async (orderId: string, newPaymentStatus: string) => {
+    setUpdatingPaymentId(orderId)
+    
+    try {
+      const response = await fetch(`/api/orders/${orderId}/payment-status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ paymentStatus: newPaymentStatus })
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        // Update the order in the local state
+        setOrders(prevOrders => 
+          prevOrders.map(order => 
+            order.id === orderId 
+              ? { ...order, paymentStatus: newPaymentStatus, status: result.order.status }
+              : order
+          )
+        )
+        
+        // Also update the selected order if it's the same one
+        if (selectedOrder && selectedOrder.id === orderId) {
+          setSelectedOrder(prev => prev ? { 
+            ...prev, 
+            paymentStatus: newPaymentStatus,
+            status: result.order.status 
+          } : null)
+        }
+        
+        alert(result.message)
+      } else {
+        console.error('Failed to update payment status:', result.error)
+        alert('Failed to update payment status: ' + result.error)
+      }
+    } catch (error) {
+      console.error('Error updating payment status:', error)
+      alert('Failed to update payment status. Please try again.')
+    } finally {
+      setUpdatingPaymentId(null)
     }
   }
 
@@ -268,9 +315,23 @@ const Dashboard = () => {
                     >
                       <p className="font-medium text-sm">#{String(order.id).padStart(6, '0')}</p>
                       <p className="text-xs text-white/70">{order.user.email}</p>
-                      <p className="text-xs text-white/50">
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </p>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <p className="text-xs text-white/50">
+                          {new Date(order.createdAt).toLocaleDateString()}
+                        </p>
+                        <span className={`text-xs px-2 py-0.5 rounded ${
+                          order.paymentMethod === 'COD' ? 'bg-amber-500/20 text-amber-300' : 'bg-blue-500/20 text-blue-300'
+                        }`}>
+                          {order.paymentMethod === 'COD' ? 'COD' : 'Online'}
+                        </span>
+                        <span className={`text-xs px-2 py-0.5 rounded ${
+                          order.paymentStatus === 'PAID' ? 'bg-green-500/20 text-green-300' :
+                          order.paymentStatus === 'PENDING' ? 'bg-yellow-500/20 text-yellow-300' :
+                          'bg-red-500/20 text-red-300'
+                        }`}>
+                          {order.paymentStatus}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <div className="text-right">
@@ -356,6 +417,7 @@ const Dashboard = () => {
           isOpen={showOrderModal}
           onClose={closeOrderModal}
           onStatusUpdate={updateOrderStatus}
+          onPaymentStatusUpdate={updatePaymentStatus}
         />
       )}
     </div>
