@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 export const Hero = () => {
   return (
-    <div className="relative overflow-hidden min-h-screen text-center">
+    <div id="hero" className="relative overflow-hidden min-h-screen text-center">
         <div className="relative max-w-6xl mx-auto z-0 inset-0">
          
 
