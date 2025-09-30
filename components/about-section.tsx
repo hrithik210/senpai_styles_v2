@@ -1,19 +1,17 @@
-"use client"
-
-export default function About() {
+export const AboutSection = () => {
   return (
-    <div className="h-screen bg-black text-white relative overflow-hidden flex items-center justify-center">
+    <section className="py-20 bg-black text-white relative overflow-hidden">
       {/* Background gradient effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-gray-900/10"></div>
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-red-500/5 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       
-      <div className="relative max-w-7xl mx-auto px-8 lg:px-16 w-full">
+      <div className="relative max-w-7xl mx-auto px-8 lg:px-16">
         {/* Header - Centered */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6 font-serif text-white animate-fade-in">
+          <h2 className="text-3xl lg:text-5xl font-bold tracking-tight mb-6 font-serif text-white animate-fade-in">
             Who We Are
-          </h1>
+          </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-white rounded-full animate-expand mx-auto"></div>
         </div>
 
@@ -37,9 +35,9 @@ export default function About() {
             <div className="group hover:scale-[1.02] transition-all duration-300 ease-out">
               <div className="relative p-6 rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/30 to-black/50 backdrop-blur-sm hover:border-red-500/40 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 h-full flex flex-col">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-white/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <h2 className="relative text-xl lg:text-2xl font-bold mb-4 text-center text-white hover:text-red-300 transition-colors duration-300 cursor-default">
+                <h3 className="relative text-xl lg:text-2xl font-bold mb-4 text-center text-white hover:text-red-300 transition-colors duration-300 cursor-default">
                   The Vibe
-                </h2>
+                </h3>
                 <div className="w-12 h-0.5 bg-red-500 mx-auto mb-4"></div>
                 <p className="relative text-gray-300 text-base leading-relaxed text-center flex-grow flex items-center">
                   No filler. No boring basics. Just pieces that make you feel like the <span className="text-white font-bold">main character</span>.
@@ -51,9 +49,9 @@ export default function About() {
             <div className="group hover:scale-[1.02] transition-all duration-300 ease-out">
               <div className="relative p-6 rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/30 to-black/50 backdrop-blur-sm hover:border-red-500/40 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 h-full flex flex-col">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-white/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <h2 className="relative text-xl lg:text-2xl font-bold mb-4 text-center text-white hover:text-red-300 transition-colors duration-300 cursor-default">
+                <h3 className="relative text-xl lg:text-2xl font-bold mb-4 text-center text-white hover:text-red-300 transition-colors duration-300 cursor-default">
                   Refunds
-                </h2>
+                </h3>
                 <div className="w-12 h-0.5 bg-red-500 mx-auto mb-4"></div>
                 <p className="relative text-gray-300 text-base leading-relaxed text-center flex-grow flex items-center">
                   Didn't vibe? Wrong size? Shipping messed it up? <span className="text-red-400 font-semibold hover:text-red-300 transition-colors duration-300 cursor-default">Send it back — simple</span>.
@@ -65,25 +63,15 @@ export default function About() {
             <div className="group hover:scale-[1.02] transition-all duration-300 ease-out">
               <div className="relative p-6 rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/30 to-black/50 backdrop-blur-sm hover:border-red-500/40 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 h-full flex flex-col">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-white/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <h2 className="relative text-xl lg:text-2xl font-bold mb-4 text-center text-white hover:text-red-300 transition-colors duration-300 cursor-default">
+                <h3 className="relative text-xl lg:text-2xl font-bold mb-4 text-center text-white hover:text-red-300 transition-colors duration-300 cursor-default">
                   What's Next
-                </h2>
+                </h3>
                 <div className="w-12 h-0.5 bg-red-500 mx-auto mb-4"></div>
                 <p className="relative text-gray-300 text-base leading-relaxed text-center flex-grow flex items-center">
                   Tees today. <span className="text-red-400 font-semibold hover:text-red-300 transition-colors duration-300 cursor-default">Hoodies, accessories, and wilder drops</span> coming soon.
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Bottom CTA - Centered */}
-        <div className="mt-12 text-center">
-          <div className="inline-block relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-white rounded-full blur-lg opacity-20 animate-pulse"></div>
-            <p className="relative text-gray-300 text-lg font-medium px-8 py-4 rounded-full border border-red-500/30 bg-black/70 backdrop-blur-sm hover:text-white hover:border-red-500/60 hover:bg-red-500/10 transition-all duration-300 cursor-default">
-              Ready to be the main character?
-            </p>
           </div>
         </div>
       </div>
@@ -117,6 +105,6 @@ export default function About() {
           animation: expand 1.5s ease-out 0.5s both;
         }
       `}</style>
-    </div>
+    </section>
   );
-}
+};
