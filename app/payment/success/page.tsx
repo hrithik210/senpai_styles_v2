@@ -4,12 +4,6 @@ import { Button } from '@/components/ui/button'
 import { useCart } from '@/lib/cart-context'
 
 const PaymentSuccessPage = () => {
-  const { clearCart } = useCart()
-
-  useEffect(() => {
-    // Clear cart when user reaches success page
-    clearCart()
-  }, [clearCart])
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">

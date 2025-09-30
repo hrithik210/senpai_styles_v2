@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const orderId = params.id
+    const orderId = await params.id
     
     if (!orderId) {
       return NextResponse.json(
@@ -77,7 +77,7 @@ export async function PATCH(
       )
     }
 
-    const orderId = params.id
+    const orderId = await params.id
     
     if (!orderId) {
       return NextResponse.json(

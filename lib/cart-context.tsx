@@ -16,7 +16,6 @@ interface CartContextType {
   updateSize: (id: number, size: string) => void
   addItem: (item: Omit<CartItem, 'quantity'>) => void
   removeItem: (id: number) => void
-  clearCart: () => void
   getTotalItems: () => number
   getSubtotal: () => number
 }
@@ -89,7 +88,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       updateSize,
       addItem,
       removeItem,
-      clearCart,
       getTotalItems,
       getSubtotal
     }}>

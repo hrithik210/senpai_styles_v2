@@ -27,6 +27,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate required order data
+    if (!order.user.email) {
+      return NextResponse.json(
+        { success: false, error: "Customer email is required" },
+        { status: 400 }
+      );
+    }
+
+    if (order.total <= 0) {
+      return NextResponse.json(
+        { success: false, error: "Order amount must be greater than 0" },
+        { status: 400 }
+      );
+    }
+
+    // Ensure phone number is in correct format (Indian mobile number)
+    let customerPhone = order.user.phone || order.address.phone || "9999999999";
+    if (!customerPhone.match(/^[6-9]\d{9}$/)) {
+      customerPhone = "9999999999"; // Default valid Indian mobile number
+    }
+
+    let customerName = `${order.user.firstName || "Customer"} ${order.user.lastName || ""}`.trim();
+    if (customerName.length < 1) {
+      customerName = "Customer";
+    }
+
     const cashfreeOrderData = {
       order_id: order.id,
       order_amount: order.total,
@@ -34,17 +60,16 @@ export async function POST(request: NextRequest) {
       customer_details: {
         customer_id: order.userId,
         customer_email: order.user.email,
-        customer_phone: order.user.phone || order.address.phone || "9999999999",
-        customer_name: `${order.user.firstName || ""} ${
-          order.user.lastName || ""
-        }`.trim(),
+        customer_phone: customerPhone,
+        customer_name: customerName,
       },
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/order/confirmation?order_id={order_id}`,
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?order_id=${order.id}`,
         notify_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/cashfree/webhook`,
-        payment_methods: "cc,dc,upi,nb,wallet,app,paylater",
       },
     };
+
+    console.log("Cashfree order data:", JSON.stringify(cashfreeOrderData, null, 2));
 
     const response = await cashfree.post("/pg/orders", cashfreeOrderData);
 
@@ -64,13 +89,21 @@ export async function POST(request: NextRequest) {
       order_id: response.data.order_id,
       cf_order_id: response.data.cf_order_id
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Cashfree session creation error:', error)
+    
+    // Log detailed error information
+    if (error.response) {
+      console.error('Cashfree API Error Response:', error.response.data)
+      console.error('Status:', error.response.status)
+    }
+    
     return NextResponse.json(
       { 
         success: false, 
         error: 'Failed to create payment session',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        cashfreeError: error.response?.data || null
       },
       { status: 500 }
     )
