@@ -12,9 +12,10 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="relative w-full border-b border-gray-800/50">
+    <nav className="relative w-full z-50 bg-black/95 border-b border-red-900/30 shadow-lg shadow-red-900/5 overflow-visible">
+    
       {/* Main navbar */}
-      <div className="relative flex justify-between items-center px-6 py-4 lg:px-12 max-w-7xl mx-auto">
+      <div className="relative flex justify-between items-center px-6 py-4 lg:px-12 max-w-7xl mx-auto z-10">
         {/* Logo */}
         <div className="flex items-center">
           <Link href={"/"} className="group">
