@@ -26,16 +26,38 @@ export const Navbar = () => {
 
         {/* Desktop Navigation - Centered */}
         <div className="hidden lg:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
-          <Link href="/about" className="group">
+          <button
+            onClick={() => {
+              const about = document.getElementById('about');
+              if (about) {
+                about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              } else {
+                window.location.href = '/#about';
+              }
+            }}
+            className="group bg-transparent border-none outline-none p-0 m-0"
+            style={{ background: 'none' }}
+          >
             <span className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer font-medium px-4 py-2 rounded-lg border border-transparent hover:border-gray-700 hover:bg-gray-900/50 transition-all">
               About
             </span>
-          </Link>
-          <Link href="/contact" className="group">
+          </button>
+          <button
+            onClick={() => {
+              const contact = document.getElementById('contact');
+              if (contact) {
+                contact.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              } else {
+                window.location.href = '/#contact';
+              }
+            }}
+            className="group bg-transparent border-none outline-none p-0 m-0"
+            style={{ background: 'none' }}
+          >
             <span className="text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer font-medium px-4 py-2 rounded-lg border border-transparent hover:border-gray-700 hover:bg-gray-900/50 transition-all">
               Contact
             </span>
-          </Link>
+          </button>
         </div>
 
         {/* Desktop Icons & Mobile Menu Button */}
@@ -99,16 +121,44 @@ export const Navbar = () => {
       >
         <div className="flex flex-col px-6 py-6 space-y-4 max-w-7xl mx-auto">
           {/* Mobile Navigation Links */}
-          <Link href="/about" className="group" onClick={() => setIsMobileMenuOpen(false)}>
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setTimeout(() => {
+                const about = document.getElementById('about');
+                if (about) {
+                  about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                  window.location.href = '/#about';
+                }
+              }, 100);
+            }}
+            className="group bg-transparent border-none outline-none p-0 m-0 w-full text-left"
+            style={{ background: 'none' }}
+          >
             <span className="block text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer font-medium px-4 py-3 rounded-lg border border-transparent hover:border-gray-700 hover:bg-gray-900/50 transition-all">
               About
             </span>
-          </Link>
-          <Link href="/contact" className="group" onClick={() => setIsMobileMenuOpen(false)}>
+          </button>
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setTimeout(() => {
+                const contact = document.getElementById('contact');
+                if (contact) {
+                  contact.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                  window.location.href = '/#contact';
+                }
+              }, 100);
+            }}
+            className="group bg-transparent border-none outline-none p-0 m-0 w-full text-left"
+            style={{ background: 'none' }}
+          >
             <span className="block text-sm font-serif hover:text-gray-300 duration-300 cursor-pointer font-medium px-4 py-3 rounded-lg border border-transparent hover:border-gray-700 hover:bg-gray-900/50 transition-all">
               Contact
             </span>
-          </Link>
+          </button>
           
           {/* Mobile Icons */}
           <div className="flex items-center gap-6 px-4 py-3 border-t border-gray-800/50 mt-4 pt-6">

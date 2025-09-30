@@ -1,8 +1,18 @@
 "use client"
 
 export const AboutSection = () => {
+  const scrollToHero = () => {
+    const heroElement = document.getElementById('hero');
+    if (heroElement) {
+      heroElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
-    <section className="py-20 bg-black text-white relative overflow-hidden">
+    <section id="about" className="py-20 bg-black text-white relative overflow-hidden">
       {/* Background gradient effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-gray-900/10"></div>
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-red-500/5 rounded-full blur-3xl animate-pulse"></div>
@@ -80,9 +90,12 @@ export const AboutSection = () => {
         <div className="mt-12 text-center">
           <div className="inline-block relative">
             <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-white rounded-full blur-lg opacity-20 animate-pulse"></div>
-            <p className="relative text-gray-300 text-lg font-medium px-8 py-4 rounded-full border border-red-500/30 bg-black/70 backdrop-blur-sm hover:text-white hover:border-red-500/60 hover:bg-red-500/10 transition-all duration-300 cursor-default">
+            <button 
+              onClick={scrollToHero}
+              className="relative text-gray-300 text-lg font-medium px-8 py-4 rounded-full border border-red-500/30 bg-black/70 backdrop-blur-sm hover:text-white hover:border-red-500/60 hover:bg-red-500/10 transition-all duration-300 cursor-pointer"
+            >
               Ready to be the main character?
-            </p>
+            </button>
           </div>
         </div>
       </div>

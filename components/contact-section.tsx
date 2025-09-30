@@ -2,7 +2,7 @@
 
 export const ContactSection = () => {
   return (
-    <section className="py-20 bg-black text-white relative overflow-hidden">
+    <section id="contact" className="py-20 bg-black text-white relative overflow-hidden">
       {/* Background gradient effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 via-black to-gray-900/10"></div>
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-red-500/5 rounded-full blur-3xl animate-pulse"></div>
