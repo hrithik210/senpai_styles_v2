@@ -17,9 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Senpai Styles",
   description: "not another ordinary clothing store",
-  icons: {
-    icon: "/senpai_logo.png"
-  }
+  icons: "/logo.avif"
 };
 
 export default function RootLayout({
