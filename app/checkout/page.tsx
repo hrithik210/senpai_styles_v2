@@ -274,9 +274,11 @@ const CheckoutPage = () => {
               script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js'
               script.onload = () => {
                 // Initialize Cashfree Checkout
+                const cashfreeMode = process.env.NEXT_PUBLIC_CASHFREE_ENV === 'PRODUCTION' ? 'production' : 'sandbox'
                 const cashfree = (window as any).Cashfree({
-                  mode: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox'
+                  mode: cashfreeMode
                 })
+
 
                 const checkoutOptions = {
                   paymentSessionId: cashfreeResult.payment_session_id,
