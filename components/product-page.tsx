@@ -15,7 +15,6 @@ interface ProductPageProps {
     images: string[]
     category: string
     features: string[]
-    materials: string[]
     careInstructions: string[]
   }
 }
@@ -110,13 +109,13 @@ const ProductPage = ({ product }: ProductPageProps) => {
           </div>
 
           {/* Product Details */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Product Header */}
             <div>
-              <h1 className="font-orbitron text-3xl md:text-4xl font-bold tracking-wider mb-2">
+              <h1 className="font-orbitron text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider mb-2">
                 {product.name}
               </h1>
-              <p className="text-[#EA2831] text-2xl md:text-3xl font-bold">
+              <p className="text-[#EA2831] text-xl md:text-2xl lg:text-3xl font-bold">
                 ₹{product.price.toFixed(2)}
               </p>
               <p className="text-white/60 text-sm mt-1 capitalize">
@@ -124,80 +123,144 @@ const ProductPage = ({ product }: ProductPageProps) => {
               </p>
             </div>
 
-            {/* Size Selection */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-white/80">
-                Size <span className="text-[#EA2831]">*</span>
-              </label>
-              <SizeSelector
-                selectedSize={selectedSize}
-                onSizeChange={setSelectedSize}
-                variant="default"
-              />
-              {!selectedSize && (
-                <p className="text-xs text-white/50">Please select a size</p>
-              )}
-            </div>
-
-            {/* Quantity Selection */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-white/80">Quantity</label>
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center border border-[#EA2831]/30 rounded-lg">
-                  <button
-                    onClick={decrementQuantity}
-                    disabled={quantity <= 1}
-                    className="p-3 hover:bg-[#EA2831]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                    </svg>
-                  </button>
-                  <span className="px-6 py-3 font-medium">{quantity}</span>
-                  <button
-                    onClick={incrementQuantity}
-                    disabled={quantity >= 3}
-                    className="p-3 hover:bg-[#EA2831]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                  </button>
+            {/* Mobile: Quick Actions Section */}
+            <div className="lg:hidden">
+              {/* Size and Quantity in one row on mobile */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                {/* Size Selection */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/80">
+                    Size <span className="text-[#EA2831]">*</span>
+                  </label>
+                  <SizeSelector
+                    selectedSize={selectedSize}
+                    onSizeChange={setSelectedSize}
+                    variant="compact"
+                  />
                 </div>
-                <span className="text-sm text-white/60">Max 3 per order</span>
-              </div>
-            </div>
 
-            {/* Add to Cart Button */}
-            <div className="pt-4">
+                {/* Quantity Selection */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/80">Qty</label>
+                  <div className="flex items-center border border-[#EA2831]/30 rounded-lg h-12">
+                    <button
+                      onClick={decrementQuantity}
+                      disabled={quantity <= 1}
+                      className="p-2 hover:bg-[#EA2831]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                      </svg>
+                    </button>
+                    <span className="px-3 font-medium text-sm flex-1 text-center">{quantity}</span>
+                    <button
+                      onClick={incrementQuantity}
+                      disabled={quantity >= 3}
+                      className="p-2 hover:bg-[#EA2831]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile Add to Cart Button */}
               <Button
                 onClick={handleAddToCart}
-                className="w-full relative group bg-[#EA2831] text-white font-bold py-4 px-8 rounded-xl hover:scale-105 transition-all duration-300 overflow-hidden text-lg tracking-wide"
+                className="w-full relative group bg-[#EA2831] text-white font-bold py-3 px-6 rounded-xl hover:scale-105 transition-all duration-300 overflow-hidden text-base tracking-wide mb-4"
               >
                 <span className="relative z-10 flex items-center justify-center space-x-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 11-4 0v-6m4 0V9a2 2 0 10-4 0v4.01" />
                   </svg>
                   <span>Add to Cart</span>
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#EA2831] to-[#b30000] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Button>
+
+              {!selectedSize && (
+                <p className="text-xs text-[#EA2831] text-center mb-4">Please select a size above</p>
+              )}
+            </div>
+
+            {/* Desktop: Original Layout */}
+            <div className="hidden lg:block space-y-6">
+              {/* Size Selection */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-white/80">
+                  Size <span className="text-[#EA2831]">*</span>
+                </label>
+                <SizeSelector
+                  selectedSize={selectedSize}
+                  onSizeChange={setSelectedSize}
+                  variant="default"
+                />
+                {!selectedSize && (
+                  <p className="text-xs text-white/50">Please select a size</p>
+                )}
+              </div>
+
+              {/* Quantity Selection */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-white/80">Quantity</label>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center border border-[#EA2831]/30 rounded-lg">
+                    <button
+                      onClick={decrementQuantity}
+                      disabled={quantity <= 1}
+                      className="p-3 hover:bg-[#EA2831]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                      </svg>
+                    </button>
+                    <span className="px-6 py-3 font-medium">{quantity}</span>
+                    <button
+                      onClick={incrementQuantity}
+                      disabled={quantity >= 3}
+                      className="p-3 hover:bg-[#EA2831]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  </div>
+                  <span className="text-sm text-white/60">Max 3 per order</span>
+                </div>
+              </div>
+
+              {/* Desktop Add to Cart Button */}
+              <div className="pt-4">
+                <Button
+                  onClick={handleAddToCart}
+                  className="w-full relative group bg-[#EA2831] text-white font-bold py-4 px-8 rounded-xl hover:scale-105 transition-all duration-300 overflow-hidden text-lg tracking-wide"
+                >
+                  <span className="relative z-10 flex items-center justify-center space-x-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 11-4 0v-6m4 0V9a2 2 0 10-4 0v4.01" />
+                    </svg>
+                    <span>Add to Cart</span>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#EA2831] to-[#b30000] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Button>
+              </div>
             </div>
 
             {/* Product Tabs */}
-            <div className="pt-8">
+            <div className="pt-4 md:pt-8">
               {/* Tab Navigation */}
-              <div className="flex border-b border-[#EA2831]/20 mb-6">
+              <div className="flex border-b border-[#EA2831]/20 mb-4 md:mb-6 overflow-x-auto">
                 {[
                   { id: 'description', label: 'Description' },
                   { id: 'features', label: 'Features' },
-                  { id: 'materials', label: 'Materials' },
                   { id: 'care', label: 'Care Instructions' }
                 ].map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
+                    className={`px-3 md:px-4 py-2 text-xs md:text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
                       activeTab === tab.id
                         ? 'text-[#EA2831] border-[#EA2831]'
                         : 'text-white/60 border-transparent hover:text-white'
@@ -209,33 +272,20 @@ const ProductPage = ({ product }: ProductPageProps) => {
               </div>
 
               {/* Tab Content */}
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {activeTab === 'description' && (
                   <div>
-                    <p className="text-white/80 leading-relaxed">{product.description}</p>
+                    <p className="text-white/80 leading-relaxed text-sm md:text-base">{product.description}</p>
                   </div>
                 )}
 
                 {activeTab === 'features' && (
                   <div>
-                    <ul className="space-y-2">
+                    <ul className="space-y-1 md:space-y-2">
                       {product.features.map((feature, index) => (
-                        <li key={index} className="flex items-start space-x-2 text-white/80">
-                          <span className="text-[#EA2831] mt-1">•</span>
+                        <li key={index} className="flex items-start space-x-2 text-white/80 text-sm md:text-base">
+                          <span className="text-[#EA2831] mt-1 text-xs">•</span>
                           <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {activeTab === 'materials' && (
-                  <div>
-                    <ul className="space-y-2">
-                      {product.materials.map((material, index) => (
-                        <li key={index} className="flex items-start space-x-2 text-white/80">
-                          <span className="text-[#EA2831] mt-1">•</span>
-                          <span>{material}</span>
                         </li>
                       ))}
                     </ul>
@@ -244,10 +294,10 @@ const ProductPage = ({ product }: ProductPageProps) => {
 
                 {activeTab === 'care' && (
                   <div>
-                    <ul className="space-y-2">
+                    <ul className="space-y-1 md:space-y-2">
                       {product.careInstructions.map((instruction, index) => (
-                        <li key={index} className="flex items-start space-x-2 text-white/80">
-                          <span className="text-[#EA2831] mt-1">•</span>
+                        <li key={index} className="flex items-start space-x-2 text-white/80 text-sm md:text-base">
+                          <span className="text-[#EA2831] mt-1 text-xs">•</span>
                           <span>{instruction}</span>
                         </li>
                       ))}

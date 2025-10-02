@@ -12,7 +12,7 @@ interface SizeSelectorProps {
 const SizeSelector: React.FC<SizeSelectorProps> = ({
   selectedSize,
   onSizeChange,
-  availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+  availableSizes = ['S', 'M', 'L', 'XL', 'XXL'],
   className = '',
   variant = 'default'
 }) => {

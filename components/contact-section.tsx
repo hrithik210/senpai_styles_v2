@@ -24,7 +24,7 @@ export const ContactSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Instagram */}
           <a 
-            href="https://instagram.com/senpaistyles" 
+            href="https://www.instagram.com/senpaistyles.in?igsh=bTF0MXI5cGpxYWxo" 
             target="_blank" 
             rel="noopener noreferrer"
             className="group hover:scale-[1.05] transition-all duration-300 ease-out"

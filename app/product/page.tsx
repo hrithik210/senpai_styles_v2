@@ -14,12 +14,12 @@ const productData = {
   ],
   category: "clothing",
   features: [
-    "Premium 100% cotton fabric for ultimate comfort",
-    "Unique flame design with heat-transfer printing",
-    "Reinforced stitching for enhanced durability",
-    "Pre-shrunk to maintain perfect fit after washing",
-    "Breathable fabric ideal for all-day wear",
-    "Unisex design suitable for all body types"
+    "Premium Fabric: 100% Cotton French Terry (Loopknit) — 240 GSM heavyweight build",
+    "Luxury Finish: Bio-washed & enzyme-treated for unmatched softness & smooth texture",
+    "Unique Print Work: Front red flame design with legendary warrior artwork on back",
+    "Back Design: Durable screen print with red bold puff print (3D raised texture)",
+    "Streetwear Fit: Oversized cut with perfect drape for everyday & statement wear",
+    "Breathability: Loop knit promotes airflow for comfort in all seasons"
   ],
   materials: [
     "100% Premium Cotton",

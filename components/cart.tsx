@@ -4,7 +4,6 @@ import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import { useCart } from '@/lib/cart-context'
-import SizeSelector from './ui/size-selector'
 
 const Cart = () => {
   const { items, updateQuantity, updateSize, getSubtotal } = useCart()
@@ -74,18 +73,6 @@ const Cart = () => {
               </div>
             </div>
 
-            {/* Bottom row: Size Selector */}
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center space-x-2'>
-                <span className='text-sm text-white/80'>Size:</span>
-                <SizeSelector
-                  selectedSize={item.size}
-                  onSizeChange={(size) => updateSize(item.id, size)}
-                  variant="compact"
-                  className="flex-wrap"
-                />
-              </div>
-            </div>
           </div>
         ))}
 
