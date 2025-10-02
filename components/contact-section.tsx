@@ -53,7 +53,7 @@ export const ContactSection = () => {
 
           {/* WhatsApp */}
           <a 
-            href="https://wa.me/1234567890" 
+            href="https://wa.me/9116796083" 
             target="_blank" 
             rel="noopener noreferrer"
             className="group hover:scale-[1.05] transition-all duration-300 ease-out"
