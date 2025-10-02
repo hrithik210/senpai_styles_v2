@@ -15,15 +15,13 @@ export const Navbar = () => {
     <nav className="relative w-full z-50 bg-black/95 border-b border-red-900/30 shadow-lg shadow-red-900/5 overflow-visible">
     
       {/* Main navbar */}
-      <div className="relative flex justify-between items-center px-6 py-4 lg:px-12 max-w-7xl mx-auto z-10">
+      <div className="flex justify-between items-center px-6 py-4 lg:px-12 max-w-7xl mx-auto">
         {/* Logo */}
-        <div className="flex items-center">
-          <Link href={"/"} className="group">
-            <span className="font-orbitron text-xl lg:text-2xl font-bold tracking-[0.15em] text-white group-hover:text-gray-300 transition-colors duration-300">
-              SENPAI STYLES
-            </span>
-          </Link>
-        </div>
+        <Link href={"/"} className="group">
+          <span className="font-orbitron text-xl lg:text-2xl font-bold tracking-[0.15em] text-white group-hover:text-gray-300 transition-colors duration-300">
+            SENPAI STYLES
+          </span>
+        </Link>
 
         {/* Desktop Navigation - Centered */}
         <div className="hidden lg:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
@@ -61,9 +59,9 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Icons for both Desktop and Mobile */}
-        <div className="flex items-center gap-2 md:gap-4">
-          {/* User Icon - Always visible */}
+        {/* User and Cart Icons - Mobile: justify-between, Desktop: with hamburger */}
+        <div className="flex items-center gap-4">
+          {/* User Icon */}
           <div className="p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 group">
             <Image
               src={"/user.svg"}
@@ -75,7 +73,7 @@ export const Navbar = () => {
             />
           </div>
           
-          {/* Cart Icon - Always visible */}
+          {/* Cart Icon */}
           <Link href="/cart" className="p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 group relative">
             <Image
               src={"/shopping-bag.png"}
@@ -87,9 +85,9 @@ export const Navbar = () => {
             />
           </Link>
 
-          {/* Mobile Menu Button - Only on mobile */}
+          {/* Mobile Menu Button - Only on desktop/lg screens */}
           <button
-            className="lg:hidden flex flex-col justify-center items-center w-6 h-6 space-y-1 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 ml-4"
+            className="hidden lg:flex flex-col justify-center items-center w-6 h-6 space-y-1 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 ml-2"
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
