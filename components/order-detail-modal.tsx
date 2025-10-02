@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image'
 import React from 'react'
 
 interface OrderDetailModalProps {
@@ -172,7 +173,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, on
               {order.orderItems.map((item) => (
                 <div key={item.id} className="flex items-center space-x-4 p-3 bg-[#1a1a1a] rounded-lg">
                   <div className="w-16 h-16 bg-gray-700 rounded-lg flex-shrink-0 overflow-hidden">
-                    <img
+                    <Image
                       src={item.product.image}
                       alt={item.product.name}
                       className="w-full h-full object-cover"

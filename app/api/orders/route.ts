@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import cashfree from '@/lib/cashfree/cashfree'
 
 export async function POST(request: NextRequest) {
   try {

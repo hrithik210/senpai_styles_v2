@@ -1,7 +1,6 @@
 "use client"
-import React, { useEffect } from 'react'
+import React  from 'react'
 import { Button } from '@/components/ui/button'
-import { useCart } from '@/lib/cart-context'
 
 const PaymentSuccessPage = () => {
 

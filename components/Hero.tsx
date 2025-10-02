@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import { GridBeams } from "./ui/grid-beams";
 import { Spotlight } from "./ui/spotlight";
 import { Button } from "./ui/button";
 import Link from "next/link";
