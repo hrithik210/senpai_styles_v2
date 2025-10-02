@@ -62,7 +62,7 @@ export const Navbar = () => {
         </div>
 
         {/* Icons for both Desktop and Mobile */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           {/* User Icon - Always visible */}
           <div className="p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 group">
             <Image
@@ -89,7 +89,7 @@ export const Navbar = () => {
 
           {/* Mobile Menu Button - Only on mobile */}
           <button
-            className="lg:hidden flex flex-col justify-center items-center w-6 h-6 space-y-1 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 ml-2"
+            className="lg:hidden flex flex-col justify-center items-center w-6 h-6 space-y-1 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 ml-4"
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
