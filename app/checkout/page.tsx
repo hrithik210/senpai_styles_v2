@@ -3,6 +3,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/lib/cart-context'
+import toast from 'react-hot-toast'
 
 const indianStatesAndUTs = [
   // States
@@ -253,8 +254,19 @@ const CheckoutPage = () => {
       if (result.success) {
         if (formData.paymentMethod === 'cod') {
           // For COD orders, show success message and redirect
-          alert(`Order placed successfully! Order ID: ${result.order.id}\n\nYour order will be delivered with Cash on Delivery option. Please keep exact change ready.`)
-          window.location.href = '/payment/success'
+          toast.dismiss()
+          toast.success(`Order placed successfully! Order ID: ${result.order.id}`, {
+            duration: 5000,
+            id: 'order-success'
+          })
+          toast('Your order will be delivered with Cash on Delivery. Please keep exact change ready.', {
+            icon: '💰',
+            duration: 6000,
+            id: 'cod-info'
+          })
+          setTimeout(() => {
+            window.location.href = '/payment/success'
+          }, 2000)
         } else if (formData.paymentMethod === 'online') {
           // For online payments, create Cashfree payment session
           try {
@@ -288,7 +300,10 @@ const CheckoutPage = () => {
                 cashfree.checkout(checkoutOptions).then((checkoutResult: any) => {
                   if (checkoutResult.error) {
                     console.error('Payment failed:', checkoutResult.error)
-                    alert('Payment failed. Please try again.')
+                    toast.dismiss()
+                    toast.error('Payment failed. Please try again.', {
+                      id: 'payment-error'
+                    })
                   }
                 })
               }
@@ -298,7 +313,10 @@ const CheckoutPage = () => {
             }
           } catch (cashfreeError) {
             console.error('Cashfree integration error:', cashfreeError)
-            alert('Failed to initialize payment. Please try again.')
+            toast.dismiss()
+            toast.error('Failed to initialize payment. Please try again.', {
+              id: 'payment-init-error'
+            })
           }
         }
       } else {
@@ -306,7 +324,10 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error('Order submission error:', error)
-      alert('Failed to process order. Please try again.')
+      toast.dismiss()
+      toast.error('Failed to process order. Please try again.', {
+        id: 'order-error'
+      })
     } finally {
       setIsProcessing(false)
     }

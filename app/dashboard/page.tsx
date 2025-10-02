@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import OrderDetailModal from '@/components/order-detail-modal'
+import toast from 'react-hot-toast'
 
 interface DashboardStats {
   totalOrders: number
@@ -113,11 +114,17 @@ const Dashboard = () => {
         }
       } else {
         console.error('Failed to update order status:', result.error)
-        alert('Failed to update order status: ' + result.error)
+        toast.dismiss()
+        toast.error('Failed to update order status: ' + result.error, {
+          id: 'order-status-error'
+        })
       }
     } catch (error) {
       console.error('Error updating order status:', error)
-      alert('Failed to update order status. Please try again.')
+      toast.dismiss()
+      toast.error('Failed to update order status. Please try again.', {
+        id: 'order-status-error'
+      })
     } finally {
       setUpdatingOrderId(null)
     }
@@ -156,14 +163,23 @@ const Dashboard = () => {
           } : null)
         }
         
-        alert(result.message)
+        toast.dismiss()
+        toast.success(result.message, {
+          id: 'payment-status-success'
+        })
       } else {
         console.error('Failed to update payment status:', result.error)
-        alert('Failed to update payment status: ' + result.error)
+        toast.dismiss()
+        toast.error('Failed to update payment status: ' + result.error, {
+          id: 'payment-status-error'
+        })
       }
     } catch (error) {
       console.error('Error updating payment status:', error)
-      alert('Failed to update payment status. Please try again.')
+      toast.dismiss()
+      toast.error('Failed to update payment status. Please try again.', {
+        id: 'payment-status-error'
+      })
     } finally {
       setUpdatingPaymentId(null)
     }

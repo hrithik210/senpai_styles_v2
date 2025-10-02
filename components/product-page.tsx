@@ -5,6 +5,7 @@ import { Button } from './ui/button'
 import { useCart } from '@/lib/cart-context'
 import SizeSelector from './ui/size-selector'
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 interface ProductPageProps {
   product: {
@@ -30,7 +31,11 @@ const ProductPage = ({ product }: ProductPageProps) => {
 
   const handleAddToCart = () => {
     if (!selectedSize) {
-      alert('Please select a size before adding to cart')
+      // Dismiss any existing error toasts before showing new one
+      toast.dismiss()
+      toast.error('Please select a size before adding to cart', {
+        id: 'size-selection-error'
+      })
       return
     }
     
@@ -42,8 +47,16 @@ const ProductPage = ({ product }: ProductPageProps) => {
       size: selectedSize
     })
     
+    // Dismiss any existing toasts and show success
+    toast.dismiss()
+    toast.success(`Added ${product.name} to cart!`, {
+      id: 'add-to-cart-success'
+    })
+    
     // Redirect to cart after adding item
-    router.push('/cart')
+    setTimeout(() => {
+      router.push('/cart')
+    }, 1500)
   }
 
   const incrementQuantity = () => {
