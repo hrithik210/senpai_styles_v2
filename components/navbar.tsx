@@ -61,35 +61,35 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Desktop Icons & Mobile Menu Button */}
-        <div className="flex items-center">
-          {/* Desktop Icons */}
-          <div className="hidden lg:flex items-center gap-6">
-            <div className="p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 group">
-              <Image
-                src={"/user.svg"}
-                alt="user"
-                width={22}
-                height={22}
-                style={{ filter: "invert(1)" }}
-                className="group-hover:scale-110 transition-transform duration-300 cursor-pointer"
-              />
-            </div>
-            <Link href="/cart" className="p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 group relative">
-              <Image
-                src={"/shopping-bag.png"}
-                alt="shopping cart"
-                width={22}
-                height={22}
-                style={{ filter: "invert(1)" }}
-                className="group-hover:scale-110 transition-transform duration-300"
-              />
-            </Link>
+        {/* Icons for both Desktop and Mobile */}
+        <div className="flex items-center gap-4">
+          {/* User Icon - Always visible */}
+          <div className="p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 group">
+            <Image
+              src={"/user.svg"}
+              alt="user"
+              width={22}
+              height={22}
+              style={{ filter: "invert(1)" }}
+              className="group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+            />
           </div>
+          
+          {/* Cart Icon - Always visible */}
+          <Link href="/cart" className="p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 group relative">
+            <Image
+              src={"/shopping-bag.png"}
+              alt="shopping cart"
+              width={22}
+              height={22}
+              style={{ filter: "invert(1)" }}
+              className="group-hover:scale-110 transition-transform duration-300"
+            />
+          </Link>
 
-          {/* Mobile Hamburger Button */}
+          {/* Mobile Menu Button - Only on mobile */}
           <button
-            className="lg:hidden flex flex-col justify-center items-center w-6 h-6 space-y-1 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300"
+            className="lg:hidden flex flex-col justify-center items-center w-6 h-6 space-y-1 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 ml-2"
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
@@ -160,32 +160,6 @@ export const Navbar = () => {
               Contact
             </span>
           </button>
-          
-          {/* Mobile Icons */}
-          <div className="flex items-center gap-6 px-4 py-3 border-t border-gray-800/50 mt-4 pt-6">
-            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300 cursor-pointer">
-              <Image
-                src={"/user.svg"}
-                alt="user"
-                width={20}
-                height={20}
-                style={{ filter: "invert(1)" }}
-                className="hover:scale-110 transition-transform duration-300"
-              />
-              <span className="text-sm font-serif font-medium">Account</span>
-            </div>
-            <Link href="/cart" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-900/50 transition-all duration-300" onClick={() => setIsMobileMenuOpen(false)}>
-              <Image
-                src={"/shopping-bag.png"}
-                alt="shopping cart"
-                width={20}
-                height={20}
-                style={{ filter: "invert(1)" }}
-                className="hover:scale-110 transition-transform duration-300"
-              />
-              <span className="text-sm font-serif font-medium">Cart</span>
-            </Link>
-          </div>
         </div>
       </div>
     </nav>

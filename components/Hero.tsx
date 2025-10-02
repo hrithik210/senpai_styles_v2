@@ -48,7 +48,7 @@ export const Hero = () => {
           <p className="text-lg md:text-xl mt-2 text-white/80 mb-5">
             One tee. Endless mystery.
           </p>
-          <Link href={"/cart"}>
+          <Link href={"/product"}>
             <Button 
             className="bg-red-600 hover:bg-red-500 font-sans tracking-wide text-md
              rounded-xl shadow-md hover:scale-110 transition-all duration-300 

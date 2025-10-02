@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
 interface CartItem {
-  id: number
+  id: string
   name: string
   price: number
   quantity: number
@@ -12,10 +12,10 @@ interface CartItem {
 
 interface CartContextType {
   items: CartItem[]
-  updateQuantity: (id: number, quantity: number) => void
-  updateSize: (id: number, size: string) => void
+  updateQuantity: (id: string, quantity: number) => void
+  updateSize: (id: string, size: string) => void
   addItem: (item: Omit<CartItem, 'quantity'>) => void
-  removeItem: (id: number) => void
+  removeItem: (id: string) => void
   getTotalItems: () => number
   getSubtotal: () => number
 }
@@ -25,7 +25,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([
     {
-      id: 1,
+      id: "forbidden-flame-tee",
       name: "The Forbidden Flame Tee",
       price: 899,
       quantity: 1,
@@ -34,7 +34,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   ])
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     setItems(prev => 
       prev.map(item => 
         item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item
@@ -42,7 +42,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     )
   }
 
-  const updateSize = (id: number, size: string) => {
+  const updateSize = (id: string, size: string) => {
     setItems(prev => 
       prev.map(item => 
         item.id === id ? { ...item, size } : item
@@ -65,7 +65,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     })
   }
 
-  const removeItem = (id: number) => {
+  const removeItem = (id: string) => {
     setItems(prev => prev.filter(item => item.id !== id))
   }
 
