@@ -13,7 +13,13 @@ const Cart = () => {
         <div className='mb-6 md:mb-10 w-full'>
          <h1 className="font-orbitron text-2xl md:text-4xl lg:text-5xl font-bold tracking-wider text-center px-4">Your Cart</h1>
         </div>
-        
+
+        {items.length < 1 && (
+          <div className="text-center text-white/70 text-lg mt-8">
+            Your cart is empty.
+          </div>
+        )}
+
         {/* Cart Items */}
         {items.map((item) => (
           <div key={item.id} className='relative flex flex-col p-3 md:p-6 bg-[#1a1a1a] rounded-lg border border-[#EA2831]/20 w-full max-w-4xl mt-4 md:mt-8 gap-3 md:gap-4 mx-4'>
