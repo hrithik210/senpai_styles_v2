@@ -9,7 +9,9 @@ async function main() {
   // Create a sample product
   const product = await prisma.product.upsert({
     where: { id: 'forbidden-flame-tee' },
-    update: {},
+    update: {
+      price: 899, // Reverted back to ₹899
+    },
     create: {
       id: 'forbidden-flame-tee',
       name: 'The Forbidden Flame Tee',

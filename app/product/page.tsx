@@ -4,7 +4,7 @@ import ProductPage from '@/components/product-page'
 const productData = {
   id: "forbidden-flame-tee",
   name: "The Forbidden Flame Tee",
-  price: 899,
+  price: 1, // Updated to match database
   description: "Elevate your streetwear game with our premium Forbidden Flame Tee. This isn't just another t-shirt – it's a statement piece that embodies the rebellious spirit of modern fashion. Crafted with meticulous attention to detail, this tee features a striking flame design that represents passion, energy, and the fire within every fashion enthusiast.",
   images: [
     "/product.png",
