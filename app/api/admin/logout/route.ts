@@ -1,19 +1,5 @@
 import { NextResponse } from 'next/server'
 
-// Add CORS headers to response
-function addCorsHeaders(response: NextResponse) {
-  const allowedOrigin = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, '') || 'https://senpaistyles.in'
-  response.headers.set('Access-Control-Allow-Origin', allowedOrigin)
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie')
-  response.headers.set('Access-Control-Allow-Credentials', 'true')
-  return response
-}
-
-export async function OPTIONS() {
-  return addCorsHeaders(new NextResponse(null, { status: 200 }))
-}
-
 export async function POST() {
   const response = NextResponse.json({ success: true })
   
@@ -25,5 +11,5 @@ export async function POST() {
     maxAge: 0
   })
   
-  return addCorsHeaders(response)
+  return response
 }
