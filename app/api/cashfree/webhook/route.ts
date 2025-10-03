@@ -5,6 +5,11 @@ import { prisma } from '@/lib/prisma'
 import crypto from 'crypto'
 import cashfree from '@/lib/cashfree/cashfree'
 
+// Handle preflight requests
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 200 })
+}
+
 function verifyCashfreeSignature(
   timestamp: string,
   rawBody: string,

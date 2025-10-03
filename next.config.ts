@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Apply CORS headers to all API routes
+        // Apply CORS headers to all API routes (restrict to your domain)
         source: "/api/:path*",
         headers: [
           {
@@ -29,6 +29,24 @@ const nextConfig: NextConfig = {
           {
             key: "Access-Control-Allow-Credentials",
             value: "true",
+          },
+        ],
+      },
+      {
+        // Special CORS rules for Cashfree webhooks - allow external services
+        source: "/api/cashfree/webhook/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*", // Allow all origins for webhooks
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "POST, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, x-webhook-timestamp, x-webhook-signature, User-Agent",
           },
         ],
       },
