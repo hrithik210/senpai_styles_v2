@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   // Only protect dashboard routes
   if (request.nextUrl.pathname.startsWith('/dashboard')) {
-    const sessionToken = request.cookies.get('admin-session')?.value
+    const sessionToken = request.cookies.get('admin-token')?.value
 
     if (!sessionToken) {
       // Redirect to admin login if no session
@@ -12,33 +12,33 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      // Verify session token (simplified validation)
-      const decoded = Buffer.from(sessionToken, 'base64').toString('utf-8')
-      const [adminId, timestamp] = decoded.split(':')
-      
-      // Check if session is expired (7 days)
-      const sessionAge = Date.now() - parseInt(timestamp)
-      const maxAge = 60 * 60 * 24 * 7 * 1000 // 7 days in milliseconds
-      
-      if (sessionAge > maxAge || !adminId) {
-        // Clear expired session and redirect to login
-        const response = NextResponse.redirect(new URL('/admin/login', request.url))
-        response.cookies.set('admin-session', '', {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 0
-        })
-        return response
+      // Call verification API to check token validity
+      const verifyUrl = new URL('/api/admin/verify', request.url)
+      const verifyResponse = await fetch(verifyUrl.toString(), {
+        method: 'GET',
+        headers: {
+          'Cookie': `admin-token=${sessionToken}`
+        }
+      })
+
+      if (!verifyResponse.ok) {
+        throw new Error('Token verification failed')
       }
 
-      // Session is valid, allow access
+      const verifyData = await verifyResponse.json()
+      
+      if (!verifyData.success) {
+        throw new Error('Invalid token')
+      }
+
+      // Token is valid, allow access
       return NextResponse.next()
 
     } catch (error) {
+      console.error('Middleware authentication error:', error)
       // Invalid session token, redirect to login
       const response = NextResponse.redirect(new URL('/admin/login', request.url))
-      response.cookies.set('admin-session', '', {
+      response.cookies.set('admin-token', '', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
