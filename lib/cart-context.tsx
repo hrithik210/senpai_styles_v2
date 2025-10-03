@@ -28,7 +28,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       id: "forbidden-flame-tee",
       name: "The Forbidden Flame Tee",
       price: 899,
-      quantity: 1,
+      quantity: 0,
       image: "/product.png",
       size: "M"
     }
