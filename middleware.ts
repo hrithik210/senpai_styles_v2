@@ -40,7 +40,7 @@ export async function middleware(request: NextRequest) {
       const response = NextResponse.redirect(new URL('/admin/login', request.url))
       response.cookies.set('admin-token', '', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: true, // Always use secure in production
         sameSite: 'strict',
         maxAge: 0
       })

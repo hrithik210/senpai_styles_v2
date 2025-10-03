@@ -3,15 +3,30 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from '@/lib/prisma'
 
+// Add CORS headers to response
+function addCorsHeaders(response: NextResponse) {
+  const allowedOrigin = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, '') || 'https://senpaistyles.in'
+  response.headers.set('Access-Control-Allow-Origin', allowedOrigin)
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie')
+  response.headers.set('Access-Control-Allow-Credentials', 'true')
+  return response
+}
+
+export async function OPTIONS() {
+  return addCorsHeaders(new NextResponse(null, { status: 200 }))
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
 
     if (!email || !password) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { success: false, error: 'Email and password are required' },
         { status: 400 }
       )
+      return addCorsHeaders(response)
     }
 
     // Find admin by email
@@ -20,20 +35,22 @@ export async function POST(request: NextRequest) {
     })
 
     if (!admin || !admin.isActive) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { success: false, error: 'Invalid credentials' },
         { status: 401 }
       )
+      return addCorsHeaders(response)
     }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, admin.password)
     
     if (!isPasswordValid) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { success: false, error: 'Invalid credentials' },
         { status: 401 }
       )
+      return addCorsHeaders(response)
     }
 
     // Create JWT token
@@ -60,21 +77,22 @@ export async function POST(request: NextRequest) {
     // Set the JWT token as an httpOnly cookie
     response.cookies.set('admin-token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true, // Always use secure in production
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 * 7 // 7 days
     })
 
-    return response
+    return addCorsHeaders(response)
 
   } catch (error) {
     console.error('Admin login error:', error)
-    return NextResponse.json(
+    const response = NextResponse.json(
       { 
         success: false, 
         error: 'Internal server error' 
       },
       { status: 500 }
     )
+    return addCorsHeaders(response)
   }
 }

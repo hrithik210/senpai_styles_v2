@@ -2,15 +2,30 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import jwt from 'jsonwebtoken'
 
+// Add CORS headers to response
+function addCorsHeaders(response: NextResponse) {
+  const allowedOrigin = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, '') || 'https://senpaistyles.in'
+  response.headers.set('Access-Control-Allow-Origin', allowedOrigin)
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie')
+  response.headers.set('Access-Control-Allow-Credentials', 'true')
+  return response
+}
+
+export async function OPTIONS() {
+  return addCorsHeaders(new NextResponse(null, { status: 200 }))
+}
+
 export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get('admin-token')?.value
 
     if (!token) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { success: false, error: 'No token found' },
         { status: 401 }
       )
+      return addCorsHeaders(response)
     }
 
     // Verify JWT token
@@ -29,32 +44,36 @@ export async function GET(request: NextRequest) {
       })
 
       if (!admin || !admin.isActive) {
-        return NextResponse.json(
+        const response = NextResponse.json(
           { success: false, error: 'Invalid token' },
           { status: 401 }
         )
+        return addCorsHeaders(response)
       }
 
-      return NextResponse.json({
+      const response = NextResponse.json({
         success: true,
         admin
       })
+      return addCorsHeaders(response)
 
     } catch (decodeError) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { success: false, error: 'Invalid session token' },
         { status: 401 }
       )
+      return addCorsHeaders(response)
     }
 
   } catch (error) {
     console.error('Session verification error:', error)
-    return NextResponse.json(
+    const response = NextResponse.json(
       { 
         success: false, 
         error: 'Internal server error' 
       },
       { status: 500 }
     )
+    return addCorsHeaders(response)
   }
 }
