@@ -407,34 +407,34 @@ const CheckoutPage = () => {
       <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="font-orbitron text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider bg-gradient-to-r from-[#EA2831] to-[#FF4655] bg-clip-text text-transparent">
+        <div className="mb-6 sm:mb-8 text-center">
+          <h1 className="font-orbitron text-xl sm:text-2xl md:text-3xl font-bold tracking-wider bg-gradient-to-r from-[#EA2831] to-[#FF4655] bg-clip-text text-transparent px-4">
             Secure Checkout
           </h1>
-          <p className="text-white/70 mt-2 text-sm sm:text-base">Just a few steps to complete your order</p>
+          <p className="text-white/70 mt-2 text-xs sm:text-sm px-4">Just a few steps to complete your order</p>
 
-          {/* Progress Steps */}
-          <div className="mt-6 max-w-2xl mx-auto">
-            <div className="flex items-center justify-center space-x-2 sm:space-x-4">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-[#EA2831] flex items-center justify-center text-white font-bold text-sm">
+          {/* Progress Steps - Mobile Optimized */}
+          <div className="mt-4 sm:mt-6 px-4">
+            <div className="flex items-center justify-between max-w-md mx-auto">
+              <div className="flex flex-col items-center flex-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#EA2831] flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-lg shadow-[#EA2831]/50">
                   1
                 </div>
-                <span className="ml-2 text-xs sm:text-sm font-medium">Information</span>
+                <span className="mt-2 text-[10px] sm:text-xs font-medium text-center">Info</span>
               </div>
-              <div className="w-8 sm:w-16 h-0.5 bg-[#EA2831]/30"></div>
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-[#EA2831] flex items-center justify-center text-white font-bold text-sm">
+              <div className="flex-1 h-1 bg-[#EA2831] mx-2 rounded-full"></div>
+              <div className="flex flex-col items-center flex-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#EA2831] flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-lg shadow-[#EA2831]/50">
                   2
                 </div>
-                <span className="ml-2 text-xs sm:text-sm font-medium">Payment</span>
+                <span className="mt-2 text-[10px] sm:text-xs font-medium text-center">Payment</span>
               </div>
-              <div className="w-8 sm:w-16 h-0.5 bg-[#EA2831]/30"></div>
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-[#EA2831]/30 flex items-center justify-center text-white/50 font-bold text-sm">
+              <div className="flex-1 h-1 bg-[#EA2831]/30 mx-2 rounded-full"></div>
+              <div className="flex flex-col items-center flex-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#EA2831]/30 flex items-center justify-center text-white/50 font-bold text-sm sm:text-base">
                   3
                 </div>
-                <span className="ml-2 text-xs sm:text-sm text-white/50">Complete</span>
+                <span className="mt-2 text-[10px] sm:text-xs text-white/50 text-center">Done</span>
               </div>
             </div>
           </div>
@@ -444,7 +444,7 @@ const CheckoutPage = () => {
           {/* Left Column - Checkout Form (spans 2 columns on lg) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Contact Information */}
-            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-6 rounded-xl border border-[#EA2831]/20 shadow-lg shadow-[#EA2831]/5">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-4 sm:p-6 rounded-xl border border-[#EA2831]/20 shadow-lg shadow-[#EA2831]/5">
               {/* Form Validation Summary */}
               {Object.keys(errors).length > 0 && (
                 <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl backdrop-blur-sm animate-pulse">
@@ -462,12 +462,12 @@ const CheckoutPage = () => {
                 </div>
               )}
 
-              <div className="flex items-center space-x-2 mb-6">
+              <div className="flex items-center space-x-2 mb-4 sm:mb-6">
                 <svg className="w-5 h-5 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
-                <h2 className="font-orbitron text-lg font-bold text-white">Contact Information</h2>
+                <h2 className="font-orbitron text-base sm:text-lg font-bold text-white">Contact Information</h2>
               </div>
               <div className="space-y-4">
                 <div>
@@ -481,7 +481,9 @@ const CheckoutPage = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 bg-black/50 border-2 rounded-xl focus:outline-none transition-all duration-200 text-sm backdrop-blur-sm ${
+                      inputMode="email"
+                      autoComplete="email"
+                      className={`w-full px-4 py-3.5 sm:py-3 bg-black/50 border-2 rounded-xl focus:outline-none transition-all duration-200 text-base sm:text-sm backdrop-blur-sm ${
                         errors.email
                           ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20'
                           : 'border-[#EA2831]/30 focus:border-[#EA2831] focus:ring-2 focus:ring-[#EA2831]/20'
@@ -508,12 +510,12 @@ const CheckoutPage = () => {
             </div>
 
             {/* Shipping Address */}
-            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-6 rounded-xl border border-[#EA2831]/20 shadow-lg shadow-[#EA2831]/5">
-              <div className="flex items-center space-x-2 mb-6">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-4 sm:p-6 rounded-xl border border-[#EA2831]/20 shadow-lg shadow-[#EA2831]/5">
+              <div className="flex items-center space-x-2 mb-4 sm:mb-6">
                 <svg className="w-5 h-5 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                 </svg>
-                <h2 className="font-orbitron text-lg font-bold text-white">Shipping Address</h2>
+                <h2 className="font-orbitron text-base sm:text-lg font-bold text-white">Shipping Address</h2>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -708,17 +710,17 @@ const CheckoutPage = () => {
             </div>
 
             {/* Payment Method */}
-            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-6 rounded-xl border border-[#EA2831]/20 shadow-lg shadow-[#EA2831]/5">
-              <div className="flex items-center space-x-2 mb-6">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-4 sm:p-6 rounded-xl border border-[#EA2831]/20 shadow-lg shadow-[#EA2831]/5">
+              <div className="flex items-center space-x-2 mb-4 sm:mb-6">
                 <svg className="w-5 h-5 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
                   <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
                 </svg>
-                <h2 className="font-orbitron text-lg font-bold text-white">Payment Method</h2>
+                <h2 className="font-orbitron text-base sm:text-lg font-bold text-white">Payment Method</h2>
               </div>
               <div className="space-y-4">
                 {/* Online Payment Option */}
-                <div className={`relative flex items-center space-x-4 p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer group ${
+                <div className={`relative flex items-center space-x-3 sm:space-x-4 p-4 sm:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer group active:scale-[0.98] ${
                   formData.paymentMethod === 'online'
                     ? 'border-[#EA2831] bg-[#EA2831]/10 shadow-lg shadow-[#EA2831]/20'
                     : 'border-[#EA2831]/20 bg-black/30 hover:bg-[#EA2831]/5 hover:border-[#EA2831]/40'
@@ -730,11 +732,11 @@ const CheckoutPage = () => {
                     value="online"
                     checked={formData.paymentMethod === 'online'}
                     onChange={handleInputChange}
-                    className="w-5 h-5 text-[#EA2831] bg-black border-[#EA2831]/30 focus:ring-[#EA2831] focus:ring-2"
+                    className="w-5 h-5 sm:w-6 sm:h-6 text-[#EA2831] bg-black border-[#EA2831]/30 focus:ring-[#EA2831] focus:ring-2"
                   />
                   <label htmlFor="online" className="flex-1 cursor-pointer">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-base">Online Payment</span>
+                      <span className="font-semibold text-sm sm:text-base">Online Payment</span>
                       <div className="flex items-center space-x-2">
                         <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -744,8 +746,8 @@ const CheckoutPage = () => {
                         </span>
                       </div>
                     </div>
-                    <p className="text-xs text-white/60 mt-1.5">
-                      Pay instantly with credit card, debit card, UPI, or net banking
+                    <p className="text-xs sm:text-xs text-white/60 mt-1 sm:mt-1.5">
+                      Pay with card, UPI, or net banking
                     </p>
                   </label>
                   {formData.paymentMethod === 'online' && (
@@ -758,7 +760,7 @@ const CheckoutPage = () => {
                 </div>
 
                 {/* Cash on Delivery Option */}
-                <div className={`relative flex items-center space-x-4 p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer group ${
+                <div className={`relative flex items-center space-x-3 sm:space-x-4 p-4 sm:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer group active:scale-[0.98] ${
                   formData.paymentMethod === 'cod'
                     ? 'border-[#EA2831] bg-[#EA2831]/10 shadow-lg shadow-[#EA2831]/20'
                     : 'border-[#EA2831]/20 bg-black/30 hover:bg-[#EA2831]/5 hover:border-[#EA2831]/40'
@@ -770,11 +772,11 @@ const CheckoutPage = () => {
                     value="cod"
                     checked={formData.paymentMethod === 'cod'}
                     onChange={handleInputChange}
-                    className="w-5 h-5 text-[#EA2831] bg-black border-[#EA2831]/30 focus:ring-[#EA2831] focus:ring-2"
+                    className="w-5 h-5 sm:w-6 sm:h-6 text-[#EA2831] bg-black border-[#EA2831]/30 focus:ring-[#EA2831] focus:ring-2"
                   />
                   <label htmlFor="cod" className="flex-1 cursor-pointer">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-base">Cash on Delivery</span>
+                      <span className="font-semibold text-sm sm:text-base">Cash on Delivery</span>
                       <div className="flex items-center space-x-2">
                         <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
@@ -785,8 +787,8 @@ const CheckoutPage = () => {
                         </span>
                       </div>
                     </div>
-                    <p className="text-xs text-white/60 mt-1.5">
-                      Pay with cash when your order is delivered to your doorstep
+                    <p className="text-xs text-white/60 mt-1 sm:mt-1.5">
+                      Pay cash when delivered
                     </p>
                   </label>
                   {formData.paymentMethod === 'cod' && (
@@ -822,36 +824,36 @@ const CheckoutPage = () => {
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-6 rounded-xl border border-[#EA2831]/20 shadow-xl shadow-[#EA2831]/10 sticky top-6">
-              <div className="flex items-center space-x-2 mb-6">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#111111] p-4 sm:p-6 rounded-xl border border-[#EA2831]/20 shadow-xl shadow-[#EA2831]/10 lg:sticky lg:top-6">
+              <div className="flex items-center space-x-2 mb-4 sm:mb-6">
                 <svg className="w-5 h-5 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
                 </svg>
-                <h2 className="font-orbitron text-lg font-bold text-white">Order Summary</h2>
+                <h2 className="font-orbitron text-base sm:text-lg font-bold text-white">Order Summary</h2>
               </div>
               
               {/* Cart Items */}
-              <div className="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-3 mb-4 sm:mb-6 max-h-60 overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center space-x-3 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-colors">
+                  <div key={item.id} className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-colors">
                     <div className="relative flex-shrink-0">
                       <Image
                         src={item.image}
                         alt={item.name}
-                        width={60}
-                        height={60}
-                        className="rounded-lg object-cover border border-[#EA2831]/20"
+                        width={50}
+                        height={50}
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover border border-[#EA2831]/20"
                       />
-                      <span className="absolute -top-2 -right-2 bg-[#EA2831] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg">
+                      <span className="absolute -top-1.5 -right-1.5 bg-[#EA2831] text-white text-[10px] sm:text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-bold shadow-lg">
                         {item.quantity}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm truncate">{item.name}</h3>
-                      <p className="text-white/60 text-xs mt-0.5">Size: {item.size}</p>
+                      <h3 className="font-semibold text-xs sm:text-sm truncate">{item.name}</h3>
+                      <p className="text-white/60 text-[10px] sm:text-xs mt-0.5">Size: {item.size}</p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="font-bold text-base text-[#EA2831]">₹{(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="font-bold text-sm sm:text-base text-[#EA2831]">₹{(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
@@ -861,11 +863,11 @@ const CheckoutPage = () => {
               <div className="border-t border-[#EA2831]/20 pt-4 mb-4">
                 {!appliedDiscount ? (
                   <div className="space-y-3">
-                    <label className="flex items-center text-sm font-semibold text-white/90">
-                      <svg className="w-4 h-4 mr-2 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
+                    <label className="flex items-center text-xs sm:text-sm font-semibold text-white/90">
+                      <svg className="w-4 h-4 mr-1.5 sm:mr-2 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
                       </svg>
-                      Have a discount code?
+                      Have a code?
                     </label>
                     <div className="flex space-x-2">
                       <input
@@ -876,7 +878,7 @@ const CheckoutPage = () => {
                           setDiscountError('')
                         }}
                         placeholder="Enter code"
-                        className="flex-1 px-4 py-2.5 bg-black/50 border-2 border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:ring-2 focus:ring-[#EA2831]/20 focus:outline-none transition-all text-sm backdrop-blur-sm"
+                        className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 bg-black/50 border-2 border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:ring-2 focus:ring-[#EA2831]/20 focus:outline-none transition-all text-sm sm:text-base backdrop-blur-sm"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             handleApplyDiscount()
@@ -885,7 +887,7 @@ const CheckoutPage = () => {
                       />
                       <Button
                         onClick={handleApplyDiscount}
-                        className="bg-[#EA2831] hover:bg-[#EA2831]/90 text-white px-5 py-2.5 text-sm font-semibold rounded-lg transition-all hover:scale-105"
+                        className="bg-[#EA2831] hover:bg-[#EA2831]/90 text-white px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-semibold rounded-lg transition-all active:scale-95"
                       >
                         Apply
                       </Button>
@@ -954,11 +956,11 @@ const CheckoutPage = () => {
               </div>
 
               {/* Complete Order Button */}
-              <div className="mt-6">
+              <div className="mt-4 sm:mt-6">
                 <Button
                   onClick={handleSubmit}
                   disabled={isProcessing}
-                  className="w-full relative group bg-gradient-to-r from-[#EA2831] to-[#FF4655] text-white font-bold py-4 px-6 rounded-xl hover:shadow-2xl hover:shadow-[#EA2831]/50 transition-all duration-300 overflow-hidden text-base tracking-wide disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none transform hover:-translate-y-0.5"
+                  className="w-full relative group bg-gradient-to-r from-[#EA2831] to-[#FF4655] text-white font-bold py-4 sm:py-5 px-6 rounded-xl hover:shadow-2xl hover:shadow-[#EA2831]/50 transition-all duration-300 overflow-hidden text-base sm:text-lg tracking-wide disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none transform active:scale-[0.98]"
                 >
                   {!isProcessing && (
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
@@ -971,50 +973,52 @@ const CheckoutPage = () => {
                       </>
                     ) : (
                       <>
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Complete Order - ₹{total.toFixed(2)}
+                        <span className="hidden sm:inline">Complete Order - </span>
+                        <span className="sm:hidden">Pay </span>
+                        ₹{total.toFixed(2)}
                       </>
                     )}
                   </span>
                 </Button>
-                <p className="text-xs text-white/50 text-center mt-3 px-2">
-                  🔒 Secure checkout • By completing your order, you agree to our Terms of Service
+                <p className="text-[10px] sm:text-xs text-white/50 text-center mt-2 sm:mt-3 px-2">
+                  🔒 Secure checkout • By completing your order, you agree to our Terms
                 </p>
               </div>
             </div>
 
             {/* Security & Trust Badges */}
-            <div className="mt-4 space-y-3">
-              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 p-4 rounded-xl border border-green-500/20">
-                <div className="flex items-center justify-center space-x-2 text-sm text-green-400 font-medium">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
+              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 p-3 sm:p-4 rounded-xl border border-green-500/20">
+                <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm text-green-400 font-medium">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
-                  <span>256-bit SSL Encrypted</span>
+                  <span>SSL Encrypted</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="bg-[#1a1a1a]/50 p-3 rounded-lg border border-[#EA2831]/10">
-                  <svg className="w-6 h-6 mx-auto mb-1 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
+                <div className="bg-[#1a1a1a]/50 p-2 sm:p-3 rounded-lg border border-[#EA2831]/10">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
                     <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
                   </svg>
-                  <p className="text-xs text-white/70">Free Delivery</p>
+                  <p className="text-[10px] sm:text-xs text-white/70">Free Ship</p>
                 </div>
-                <div className="bg-[#1a1a1a]/50 p-3 rounded-lg border border-[#EA2831]/10">
-                  <svg className="w-6 h-6 mx-auto mb-1 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
+                <div className="bg-[#1a1a1a]/50 p-2 sm:p-3 rounded-lg border border-[#EA2831]/10">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <p className="text-xs text-white/70">Authentic</p>
+                  <p className="text-[10px] sm:text-xs text-white/70">Authentic</p>
                 </div>
-                <div className="bg-[#1a1a1a]/50 p-3 rounded-lg border border-[#EA2831]/10">
-                  <svg className="w-6 h-6 mx-auto mb-1 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
+                <div className="bg-[#1a1a1a]/50 p-2 sm:p-3 rounded-lg border border-[#EA2831]/10">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 text-[#EA2831]" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clipRule="evenodd" />
                   </svg>
-                  <p className="text-xs text-white/70">24/7 Support</p>
+                  <p className="text-[10px] sm:text-xs text-white/70">24/7</p>
                 </div>
               </div>
             </div>
