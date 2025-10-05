@@ -73,6 +73,36 @@ const CheckoutPage = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isProcessing, setIsProcessing] = useState(false)
+  const [discountCode, setDiscountCode] = useState('')
+  const [appliedDiscount, setAppliedDiscount] = useState<{code: string, percentage: number} | null>(null)
+  const [discountError, setDiscountError] = useState('')
+
+  // Handle discount code application
+  const handleApplyDiscount = () => {
+    const trimmedCode = discountCode.trim().toUpperCase()
+
+    if (!trimmedCode) {
+      setDiscountError('Please enter a discount code')
+      return
+    }
+
+    if (trimmedCode === 'SS10') {
+      setAppliedDiscount({ code: trimmedCode, percentage: 10 })
+      setDiscountError('')
+      toast.success('Discount code applied! You saved 10%', {
+        id: 'discount-success'
+      })
+    } else {
+      setDiscountError('Invalid discount code')
+      setAppliedDiscount(null)
+    }
+  }
+
+  const handleRemoveDiscount = () => {
+    setAppliedDiscount(null)
+    setDiscountCode('')
+    setDiscountError('')
+  }
 
   // Validation functions
   const validateEmail = (email: string): string => {
@@ -236,6 +266,11 @@ const CheckoutPage = () => {
         subtotal: subtotal,
         shipping: shipping,
         tax: 0,
+        discount: appliedDiscount ? {
+          code: appliedDiscount.code,
+          percentage: appliedDiscount.percentage,
+          amount: discountAmount
+        } : null,
         total: total,
         paymentMethod: formData.paymentMethod
       }
@@ -335,7 +370,8 @@ const CheckoutPage = () => {
 
   const subtotal = getSubtotal()
   const shipping = 49
-  const total = subtotal
+  const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.percentage) / 100 : 0
+  const total = subtotal - discountAmount
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -710,6 +746,59 @@ const CheckoutPage = () => {
                 ))}
               </div>
 
+              {/* Discount Code Section */}
+              <div className="border-t border-[#EA2831]/20 pt-3 mb-3">
+                {!appliedDiscount ? (
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-white/80">Discount Code</label>
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={discountCode}
+                        onChange={(e) => {
+                          setDiscountCode(e.target.value.toUpperCase())
+                          setDiscountError('')
+                        }}
+                        placeholder="Enter code"
+                        className="flex-1 px-3 py-2 bg-black border border-[#EA2831]/30 rounded-lg focus:border-[#EA2831] focus:outline-none transition-colors text-sm"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleApplyDiscount()
+                          }
+                        }}
+                      />
+                      <Button
+                        onClick={handleApplyDiscount}
+                        className="bg-[#EA2831] hover:bg-[#EA2831]/80 text-white px-4 py-2 text-sm"
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                    {discountError && (
+                      <p className="text-red-500 text-xs">{discountError}</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-green-400">{appliedDiscount.code} Applied</p>
+                        <p className="text-xs text-green-300">{appliedDiscount.percentage}% discount</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleRemoveDiscount}
+                      className="text-red-400 hover:text-red-300 text-xs underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {/* Order Totals */}
               <div className="border-t border-[#EA2831]/20 pt-3 space-y-2">
                 <div className="flex justify-between text-sm">
@@ -718,8 +807,18 @@ const CheckoutPage = () => {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-white/70">Shipping</span>
-                  <span>₹{shipping.toFixed(2)}</span>
+                  <span className="line-through text-white/50">₹{shipping.toFixed(2)}</span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-green-400">Shipping Discount</span>
+                  <span className="text-green-400">FREE</span>
+                </div>
+                {appliedDiscount && (
+                  <div className="flex justify-between text-sm text-green-400">
+                    <span>Discount ({appliedDiscount.code})</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-base font-bold pt-2 border-t border-[#EA2831]/20">
                   <span>Total</span>
                   <span className="text-[#EA2831]">₹{total.toFixed(2)}</span>
